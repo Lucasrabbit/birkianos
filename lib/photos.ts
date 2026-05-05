@@ -1,4 +1,4 @@
-// 📸 Suas fotos de fundo — edite aqui para personalizar
+// 📸 Suas fotos — edite aqui para personalizar a colagem polaroid
 //
 // Como adicionar fotos do Google Drive:
 // 1. Abra a foto no Google Drive → clique com botão direito → "Obter link"
@@ -10,13 +10,21 @@ export const BACKGROUND_PHOTOS: string[] = [
   // Suas fotos aqui (Google Drive, Imgur, qualquer URL pública):
   // "https://lh3.googleusercontent.com/d/SEU_ID_AQUI",
 
-  // Fotos padrão (viagens ao redor do mundo):
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=1920&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1920&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=1920&q=80&auto=format&fit=crop",
+  // Fotos padrão (substitua pelas suas):
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=600&q=80&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=600&q=80&auto=format&fit=crop",
+];
+
+// Legendas manuscritas para cada polaroid (mesma ordem das fotos acima)
+export const PHOTO_CAPTIONS: string[] = [
+  "praia, 2024",
+  "nosso 1º roteiro",
+  "estrada da serra",
+  "café da manhã ☕",
+  "fim de tarde",
 ];
 
 export const PHOTO_INTERVAL_MS = 6000;
