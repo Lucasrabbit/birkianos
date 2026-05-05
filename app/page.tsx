@@ -8,6 +8,7 @@ import { Trip } from "@/types";
 import TripCard from "@/components/trips/TripCard";
 import Button from "@/components/ui/Button";
 import PolaroidCollage from "@/components/ui/PolaroidCollage";
+import FloralCorner from "@/components/ui/FloralCorner";
 import { getTrips, deleteTrip } from "@/lib/supabase";
 
 export default function HomePage() {
@@ -29,9 +30,16 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-birk-bg">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="min-h-screen bg-birk-bg"
+    >
       {/* ── HERO ── */}
       <section className="paper-bg relative min-h-[88vh] flex flex-col items-center justify-center overflow-hidden px-4 py-16">
+        <FloralCorner corner="top-left" density="medium" baseOpacity={0.5} />
+        <FloralCorner corner="bottom-right" density="medium" baseOpacity={0.5} />
         <PolaroidCollage />
 
         {/* Content — ilha central acima das polaroids */}
@@ -202,6 +210,6 @@ export default function HomePage() {
           Algum ritmo em comum fez nos encontrar
         </p>
       </footer>
-    </div>
+    </motion.div>
   );
 }
