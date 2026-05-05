@@ -7,7 +7,8 @@ import Link from "next/link";
 import { Trip } from "@/types";
 import TripCard from "@/components/trips/TripCard";
 import Button from "@/components/ui/Button";
-import PhotoSlideshow from "@/components/ui/PhotoSlideshow";
+import PolaroidCollage from "@/components/ui/PolaroidCollage";
+import FloralCorner from "@/components/ui/FloralCorner";
 import { getTrips, deleteTrip } from "@/lib/supabase";
 
 export default function HomePage() {
@@ -29,56 +30,59 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-birk-bg">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="min-h-screen bg-birk-bg"
+    >
       {/* ── HERO ── */}
-      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-        <PhotoSlideshow />
+      <section className="paper-bg relative min-h-[88vh] flex flex-col items-center justify-center overflow-hidden px-4 py-16">
+        <FloralCorner corner="top-left" density="medium" baseOpacity={0.5} />
+        <FloralCorner corner="bottom-right" density="medium" baseOpacity={0.5} />
+        <PolaroidCollage />
 
-        {/* Content */}
+        {/* Content — ilha central acima das polaroids */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="relative z-10 text-center px-6 max-w-2xl"
+          className="relative z-20 text-center max-w-xl pointer-events-none"
         >
-          {/* Eyebrow */}
           <motion.p
             initial={{ opacity: 0, letterSpacing: "0.4em" }}
-            animate={{ opacity: 1, letterSpacing: "0.25em" }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-white/70 text-xs font-medium tracking-[0.25em] uppercase mb-6 font-sans"
+            animate={{ opacity: 1, letterSpacing: "0.3em" }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="text-birk-muted text-xs font-medium uppercase mb-4 font-sans"
           >
             Lucas & Rox
           </motion.p>
 
-          {/* Main title */}
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="font-serif text-white mb-4"
-            style={{ fontSize: "clamp(3rem, 8vw, 6rem)", lineHeight: 1.1, fontWeight: 700 }}
+            transition={{ delay: 0.35, duration: 0.8 }}
+            className="font-serif text-birk-text mb-3"
+            style={{ fontSize: "clamp(2.75rem, 7vw, 5rem)", lineHeight: 1.05, fontWeight: 700 }}
           >
             Birk&apos;s Trip
           </motion.h1>
 
-          {/* Handwritten subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="font-hand text-birk-yellow text-2xl sm:text-3xl mb-6"
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="font-hand text-birk-terra text-3xl sm:text-4xl mb-5"
             style={{ fontWeight: 600 }}
           >
             sempre em rota 💛
           </motion.p>
 
-          {/* Phrase */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 1 }}
-            className="font-serif italic text-white/75 text-base sm:text-lg"
+            transition={{ delay: 0.7, duration: 1 }}
+            className="font-serif italic text-birk-text-soft text-base sm:text-lg max-w-md mx-auto"
             style={{ fontWeight: 400 }}
           >
             &ldquo;Algum ritmo em comum fez nos encontrar&rdquo;
@@ -89,29 +93,19 @@ export default function HomePage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1"
         >
-          <span className="text-white/50 text-xs tracking-widest uppercase font-sans">
+          <span className="text-birk-muted text-xs tracking-widest uppercase font-sans">
             nossas viagens
           </span>
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
           >
-            <ChevronDown size={20} className="text-white/50" />
+            <ChevronDown size={18} className="text-birk-muted" />
           </motion.div>
         </motion.div>
-
-        {/* Photo indicators */}
-        <div className="absolute bottom-8 right-8 z-10 flex gap-1.5">
-          {[0, 1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="w-1 h-1 rounded-full bg-white/40"
-            />
-          ))}
-        </div>
       </section>
 
       {/* ── TRIPS SECTION ── */}
@@ -216,6 +210,6 @@ export default function HomePage() {
           Algum ritmo em comum fez nos encontrar
         </p>
       </footer>
-    </div>
+    </motion.div>
   );
 }

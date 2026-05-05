@@ -43,16 +43,21 @@ export default function StopCard({
 
   const hasExtra = stop.comment || stop.why_here || stop.expected_moment;
 
+  // Soft tilt (-1° .. +1°) per card for scrapbook feel
+  const tilt = ((index % 3) - 1) * 0.8;
+
   return (
     <motion.div
       ref={setNodeRef}
-      style={style}
-      initial={{ opacity: 0, x: -12 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.04 }}
+      style={{ ...style, transformOrigin: "center bottom" }}
+      initial={{ opacity: 0, y: 16, rotate: tilt * 0.5 }}
+      whileInView={{ opacity: 1, y: 0, rotate: tilt }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ delay: index * 0.06, duration: 0.5, ease: "easeOut" }}
+      whileHover={{ y: -3, rotate: 0 }}
       className={cn(
-        "bg-white rounded-2xl shadow-soft border border-birk-border/50 transition-all duration-200",
-        isSortableDragging && "opacity-50 shadow-card-hover scale-[1.02] z-50"
+        "glass-card transition-all duration-200",
+        isSortableDragging && "opacity-50 scale-[1.02] z-50"
       )}
     >
       <div className="p-4">

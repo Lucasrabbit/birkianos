@@ -6,11 +6,8 @@ import {
   ArrowLeft,
   MapPin,
   ArrowRight,
-  Calendar,
   Printer,
   Edit2,
-  Check,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -23,6 +20,7 @@ import Notes from "@/components/notes/Notes";
 import TripForm from "@/components/trips/TripForm";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import FloralCorner from "@/components/ui/FloralCorner";
 import { formatDate, tripDays } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -38,14 +36,7 @@ const TripMap = dynamic(() => import("@/components/map/TripMap"), {
   ),
 });
 
-type Tab = "roteiro" | "mapa" | "timeline" | "notas";
-
-const TABS: { id: Tab; label: string; emoji: string }[] = [
-  { id: "roteiro", label: "Roteiro", emoji: "🗺️" },
-  { id: "mapa", label: "Mapa", emoji: "📍" },
-  { id: "timeline", label: "Timeline", emoji: "🗓️" },
-  { id: "notas", label: "Notas", emoji: "📝" },
-];
+type LeftTab = "roteiro" | "timeline";
 
 export default function TripPage({
   params,
@@ -57,7 +48,7 @@ export default function TripPage({
   const [stops, setStops] = useState<Stop[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<Tab>("roteiro");
+  const [leftTab, setLeftTab] = useState<LeftTab>("roteiro");
   const [editOpen, setEditOpen] = useState(false);
 
   useEffect(() => {
@@ -85,7 +76,10 @@ export default function TripPage({
 
   const summaryData = {
     totalKm: stops.reduce((a, s) => a + (s.distance_from_prev ?? 0), 0),
-    totalMinutes: stops.reduce((a, s) => a + (s.duration_minutes ?? 0) + (s.duration_from_prev ?? 0), 0),
+    totalMinutes: stops.reduce(
+      (a, s) => a + (s.duration_minutes ?? 0) + (s.duration_from_prev ?? 0),
+      0
+    ),
     stopsCount: stops.length,
     days,
   };
@@ -107,7 +101,10 @@ export default function TripPage({
         <div className="text-center">
           <div className="text-4xl mb-3">😕</div>
           <p className="text-birk-text font-medium">Viagem não encontrada</p>
-          <Link href="/" className="text-birk-muted text-sm mt-2 block hover:text-birk-text">
+          <Link
+            href="/"
+            className="text-birk-muted text-sm mt-2 block hover:text-birk-text"
+          >
             voltar para o início
           </Link>
         </div>
@@ -116,156 +113,228 @@ export default function TripPage({
   }
 
   return (
-    <div className="min-h-screen bg-birk-bg">
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-6"
-        >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-birk-muted hover:text-birk-text text-sm transition-colors"
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="min-h-screen paper-bg"
+    >
+      {/* ── HEADER ── */}
+      <section className="relative overflow-hidden">
+        <FloralCorner corner="top-left" density="medium" baseOpacity={0.45} />
+        <FloralCorner corner="top-right" density="light" baseOpacity={0.4} />
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 pt-8 pb-6">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-between mb-8"
           >
-            <ArrowLeft size={16} />
-            viagens
-          </Link>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setEditOpen(true)}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-birk-muted hover:text-birk-text text-sm transition-colors"
             >
-              <Edit2 size={14} />
-              editar
-            </Button>
-            <Link href={`/trips/${id}/print`} target="_blank">
-              <Button variant="secondary" size="sm">
-                <Printer size={14} />
-                imprimir
-              </Button>
+              <ArrowLeft size={16} />
+              <span className="font-hand text-lg">viagens</span>
             </Link>
-          </div>
-        </motion.div>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setEditOpen(true)}
+              >
+                <Edit2 size={14} />
+                editar
+              </Button>
+              <Link href={`/trips/${id}/print`} target="_blank">
+                <Button variant="secondary" size="sm">
+                  <Printer size={14} />
+                  imprimir
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="text-center max-w-3xl mx-auto"
+          >
+            {(trip.start_date || trip.end_date) && (
+              <p
+                className="font-hand text-birk-terra text-2xl mb-2"
+                style={{ fontWeight: 600 }}
+              >
+                {trip.start_date ? formatDate(trip.start_date) : ""}
+                {trip.start_date && trip.end_date ? " — " : ""}
+                {trip.end_date ? formatDate(trip.end_date) : ""}
+                {days > 1 && (
+                  <span className="text-birk-muted"> · {days} dias</span>
+                )}
+              </p>
+            )}
+
+            <h1
+              className="font-serif text-birk-text leading-tight mb-4"
+              style={{
+                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                fontWeight: 700,
+              }}
+            >
+              {trip.name}
+            </h1>
+
+            <div className="flex items-center justify-center gap-3 flex-wrap font-hand text-2xl text-birk-text-soft">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex w-7 h-7 rounded-full bg-birk-yellow-soft items-center justify-center">
+                  <MapPin size={14} className="text-birk-terra" />
+                </span>
+                {trip.origin}
+              </span>
+              <ArrowRight size={18} className="text-birk-muted" />
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex w-7 h-7 rounded-full bg-birk-green/15 items-center justify-center">
+                  <MapPin size={14} className="text-birk-green" />
+                </span>
+                {trip.destination}
+              </span>
+            </div>
+
+            {trip.observations && (
+              <p className="font-serif italic text-birk-muted text-base mt-5 max-w-xl mx-auto">
+                &ldquo;{trip.observations}&rdquo;
+              </p>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── SUMMARY ── */}
+      <section className="max-w-6xl mx-auto px-4 mt-2 mb-8">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="bg-white rounded-3xl shadow-card border border-birk-border/50 p-6 mb-5"
-        >
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="min-w-0">
-              <h1 className="text-2xl font-bold text-birk-text leading-tight">
-                {trip.name}
-              </h1>
-              {(trip.start_date || trip.end_date) && (
-                <div className="flex items-center gap-1.5 text-birk-muted text-sm mt-1">
-                  <Calendar size={13} />
-                  <span>
-                    {trip.start_date ? formatDate(trip.start_date) : ""}
-                    {trip.start_date && trip.end_date ? " → " : ""}
-                    {trip.end_date ? formatDate(trip.end_date) : ""}
-                  </span>
-                  {days > 1 && (
-                    <span className="px-2 py-0.5 rounded-lg bg-birk-yellow-soft text-xs font-medium text-birk-text">
-                      {days} dias
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className="text-3xl flex-shrink-0">✈️</div>
-          </div>
-
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-1.5 text-sm font-medium text-birk-text">
-              <div className="w-6 h-6 rounded-lg bg-birk-yellow-soft flex items-center justify-center">
-                <MapPin size={12} className="text-birk-yellow" />
-              </div>
-              {trip.origin}
-            </div>
-            <ArrowRight size={14} className="text-birk-muted" />
-            <div className="flex items-center gap-1.5 text-sm font-medium text-birk-text">
-              <div className="w-6 h-6 rounded-lg bg-green-50 flex items-center justify-center">
-                <MapPin size={12} className="text-birk-green" />
-              </div>
-              {trip.destination}
-            </div>
-          </div>
-
-          {trip.observations && (
-            <p className="text-sm text-birk-muted mt-3 pt-3 border-t border-birk-border">
-              {trip.observations}
-            </p>
-          )}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-5"
+          transition={{ delay: 0.25, duration: 0.5 }}
         >
           <TripSummary data={summaryData} />
         </motion.div>
+      </section>
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="bg-white rounded-3xl shadow-card border border-birk-border/50 overflow-hidden"
-        >
-          <div className="flex border-b border-birk-border overflow-x-auto">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={cn(
-                  "flex items-center gap-2 px-5 py-3.5 text-sm font-medium whitespace-nowrap transition-all flex-1 justify-center cursor-pointer",
-                  tab === t.id
-                    ? "text-birk-text border-b-2 border-birk-yellow -mb-px bg-birk-yellow-soft/30"
-                    : "text-birk-muted hover:text-birk-text hover:bg-birk-bg"
-                )}
-              >
-                <span>{t.emoji}</span>
-                <span className="hidden sm:inline">{t.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="p-5">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={tab}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-              >
-                {tab === "roteiro" && (
-                  <StopList
-                    trip={trip}
-                    stops={stops}
-                    onStopsChange={setStops}
-                  />
-                )}
-                {tab === "mapa" && <TripMap trip={trip} stops={stops} />}
-                {tab === "timeline" && (
-                  <Timeline trip={trip} stops={stops} />
-                )}
-                {tab === "notas" && (
-                  <Notes
-                    trip={trip}
-                    notes={notes}
-                    onNotesChange={setNotes}
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
+      {/* ── DIVIDER WITH FLOWERS ── */}
+      <div className="relative max-w-6xl mx-auto px-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="flex-1 h-px bg-birk-border" />
+          <span className="font-hand text-birk-terra text-xl" style={{ fontWeight: 600 }}>
+            o roteiro 🌻
+          </span>
+          <div className="flex-1 h-px bg-birk-border" />
+        </div>
       </div>
+
+      {/* ── TWO-COLUMN: roteiro + mini-map ── */}
+      <section className="max-w-6xl mx-auto px-4 pb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* LEFT — Roteiro / Timeline */}
+          <div className="lg:col-span-3 min-w-0">
+            <div className="glass-card p-5 mb-4">
+              <div className="flex gap-2 mb-4">
+                {([
+                  { id: "roteiro" as LeftTab, label: "Roteiro", emoji: "🗺️" },
+                  { id: "timeline" as LeftTab, label: "Timeline", emoji: "🗓️" },
+                ]).map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => setLeftTab(t.id)}
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-medium transition-all cursor-pointer",
+                      leftTab === t.id
+                        ? "bg-birk-yellow-soft text-birk-text border border-birk-yellow/50"
+                        : "bg-transparent text-birk-muted hover:text-birk-text hover:bg-birk-bg/60 border border-transparent"
+                    )}
+                  >
+                    <span>{t.emoji}</span>
+                    <span>{t.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={leftTab}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {leftTab === "roteiro" && (
+                    <StopList
+                      trip={trip}
+                      stops={stops}
+                      onStopsChange={setStops}
+                    />
+                  )}
+                  {leftTab === "timeline" && (
+                    <Timeline trip={trip} stops={stops} />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* RIGHT — sticky mini-map */}
+          <div className="lg:col-span-2 min-w-0">
+            <div className="lg:sticky lg:top-6 space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="glass-card overflow-hidden"
+              >
+                <div className="px-4 pt-3 pb-2 flex items-center gap-2">
+                  <span className="text-base">📍</span>
+                  <span
+                    className="font-hand text-xl text-birk-text"
+                    style={{ fontWeight: 600 }}
+                  >
+                    o caminho
+                  </span>
+                </div>
+                <div className="p-2">
+                  <TripMap trip={trip} stops={stops} />
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── DIVIDER ── */}
+      <div className="relative max-w-6xl mx-auto px-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="flex-1 h-px bg-birk-border" />
+          <span
+            className="font-hand text-birk-terra text-xl"
+            style={{ fontWeight: 600 }}
+          >
+            anotações 📝
+          </span>
+          <div className="flex-1 h-px bg-birk-border" />
+        </div>
+      </div>
+
+      {/* ── NOTES ── */}
+      <section className="relative max-w-6xl mx-auto px-4 pb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <Notes trip={trip} notes={notes} onNotesChange={setNotes} />
+        </motion.div>
+      </section>
 
       <Modal
         open={editOpen}
@@ -280,6 +349,6 @@ export default function TripPage({
           submitLabel="Salvar alterações"
         />
       </Modal>
-    </div>
+    </motion.div>
   );
 }

@@ -7,6 +7,7 @@ import { Note, Trip } from "@/types";
 import { NOTE_TYPE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Button from "@/components/ui/Button";
+import FloralCorner from "@/components/ui/FloralCorner";
 import { createNote, updateNote, deleteNote } from "@/lib/supabase";
 
 interface NotesProps {
@@ -59,8 +60,9 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-soft border border-birk-border/50 p-4">
+    <div className="relative space-y-6">
+      <FloralCorner corner="bottom-right" density="light" baseOpacity={0.4} />
+      <div className="glass-card p-4">
         <p className="text-sm font-medium text-birk-text mb-3">
           adicionar nota
         </p>
@@ -137,7 +139,7 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 8, height: 0 }}
-                    className="flex items-start gap-3 bg-white rounded-2xl shadow-soft border border-birk-border/50 p-3 group"
+                    className="flex items-start gap-3 glass-card p-3 group"
                   >
                     {type === "checklist" ? (
                       <button

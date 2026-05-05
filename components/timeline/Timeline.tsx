@@ -107,14 +107,14 @@ export default function Timeline({ trip, stops }: TimelineProps) {
           transition={{ delay: gi * 0.1 }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="px-3 py-1.5 bg-birk-yellow rounded-2xl text-sm font-semibold text-birk-text">
+            <div className="px-4 py-1.5 bg-birk-yellow-soft border border-birk-yellow/40 rounded-2xl font-hand text-xl text-birk-text" style={{ fontWeight: 600 }}>
               {group.label}
             </div>
             <div className="flex-1 h-px bg-birk-border" />
           </div>
 
           <div className="relative ml-4">
-            <div className="absolute left-[17px] top-0 bottom-0 w-0.5 bg-birk-border" />
+            <div className="timeline-rail absolute left-[17px] top-0 bottom-0 w-[3px]" />
 
             <div className="space-y-1">
               {group.stops.map((stop, si) => {
@@ -127,9 +127,10 @@ export default function Timeline({ trip, stops }: TimelineProps) {
                 return (
                   <motion.div
                     key={stop.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: gi * 0.1 + si * 0.05 }}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ delay: si * 0.08, duration: 0.5, ease: "easeOut" }}
                     className="relative flex gap-4 pb-6"
                   >
                     <div
@@ -138,7 +139,7 @@ export default function Timeline({ trip, stops }: TimelineProps) {
                       {cfg.emoji}
                     </div>
 
-                    <div className="flex-1 min-w-0 bg-white rounded-2xl shadow-soft border border-birk-border/50 p-4">
+                    <div className="flex-1 min-w-0 glass-card p-4">
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <div>
                           <span className="font-semibold text-birk-text text-sm">
