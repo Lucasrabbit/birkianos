@@ -2,39 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
   --font-inter: 'Inter', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-caveat: 'Caveat', cursive;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body {
-  background-color: #FAFAF7;
-  color: #2B2B2B;
+html, body {
+  background-color: #FDFCF7;
+  color: #2C1810;
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D4B896; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #B89070; }
+
+/* Paper texture */
+.paper-bg {
+  background-color: #FDFCF7;
+  background-image:
+    radial-gradient(ellipse at 20% 80%, rgba(244,196,48,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(127,183,126,0.04) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E");
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+/* Photo hero */
+.photo-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 1.8s ease-in-out;
 }
-::-webkit-scrollbar-thumb {
-  background: #DDDDD8;
-  border-radius: 3px;
+
+/* Polaroid */
+.polaroid {
+  background: white;
+  padding: 12px 12px 48px 12px;
+  box-shadow: 0 8px 32px rgba(44,24,16,0.18), 0 2px 8px rgba(44,24,16,0.08);
+  transform-origin: center bottom;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #BBBBBB;
+.polaroid:hover {
+  box-shadow: 0 20px 60px rgba(44,24,16,0.24);
+  z-index: 10;
 }
 
 /* Leaflet */
@@ -45,11 +65,6 @@ body {
 
 /* Print */
 @media print {
-  nav,
-  .no-print {
-    display: none !important;
-  }
-  body {
-    background: white !important;
-  }
+  nav, .no-print { display: none !important; }
+  body { background: white !important; }
 }
