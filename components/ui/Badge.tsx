@@ -12,7 +12,7 @@ export function StopBadge({ type, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-xl",
+        "inline-flex items-center gap-1 font-mono text-[9px] tracking-[0.1em] uppercase px-2 py-0.5 rounded-full",
         config.bg,
         config.color,
         className
@@ -33,7 +33,7 @@ export function Badge({ children, className }: GenericBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-xl bg-birk-yellow-soft text-birk-text",
+        "inline-flex items-center gap-1 font-mono text-[9px] tracking-[0.1em] uppercase px-2 py-0.5 rounded-full bg-birk-sun-pale text-birk-ink-soft",
         className
       )}
     >

@@ -63,7 +63,7 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
     <div className="relative space-y-6">
       <FloralCorner corner="bottom-right" density="light" baseOpacity={0.4} />
       <div className="glass-card p-4">
-        <p className="text-sm font-medium text-birk-text mb-3">
+        <p className="font-serif text-sm text-birk-ink mb-3 italic">
           adicionar nota
         </p>
 
@@ -75,10 +75,10 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
                 key={t}
                 onClick={() => setNewType(t)}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer",
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-[0.1em] transition-all cursor-pointer",
                   newType === t
-                    ? "bg-birk-yellow-soft text-birk-text border border-birk-yellow"
-                    : "bg-birk-bg text-birk-muted hover:text-birk-text border border-transparent"
+                    ? "bg-birk-sun-pale text-birk-ink border border-birk-sun"
+                    : "bg-birk-paper text-birk-ink-faint hover:text-birk-ink border border-transparent"
                 )}
               >
                 <span>{cfg.emoji}</span>
@@ -101,14 +101,9 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
                 ? "ex: confirmar reserva do hotel"
                 : "ex: tirar foto no mirante ao pôr do sol"
             }
-            className="flex-1 px-4 py-2.5 rounded-2xl border border-birk-border bg-birk-bg text-sm text-birk-text placeholder:text-birk-muted focus:outline-none focus:ring-2 focus:ring-birk-yellow/50 focus:border-birk-yellow transition-all"
+            className="flex-1 px-4 py-2.5 rounded border border-birk-edge bg-white/70 text-sm font-serif text-birk-ink placeholder:text-birk-ink-faint focus:outline-none focus:ring-2 focus:ring-birk-sun/40 focus:border-birk-sun transition-all"
           />
-          <Button
-            onClick={handleAdd}
-            loading={adding}
-            disabled={!newContent.trim()}
-            className="px-4"
-          >
+          <Button onClick={handleAdd} loading={adding} disabled={!newContent.trim()} className="px-4">
             <Plus size={16} />
           </Button>
         </div>
@@ -123,10 +118,8 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
           <div key={type}>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-base">{cfg.emoji}</span>
-              <span className="text-sm font-semibold text-birk-text">
-                {cfg.label}
-              </span>
-              <span className="px-2 py-0.5 rounded-lg bg-birk-bg text-xs text-birk-muted">
+              <span className="font-serif text-birk-ink italic">{cfg.label}</span>
+              <span className="font-mono px-2 py-0.5 rounded-full bg-birk-paper-deep text-[10px] text-birk-ink-faint tracking-[0.1em]">
                 {typeNotes.length}
               </span>
             </div>
@@ -147,27 +140,19 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
                         className="mt-0.5 flex-shrink-0 transition-colors"
                       >
                         {note.completed ? (
-                          <CheckSquare
-                            size={18}
-                            className="text-birk-green"
-                          />
+                          <CheckSquare size={18} className="text-birk-leaf" />
                         ) : (
-                          <Square
-                            size={18}
-                            className="text-birk-muted hover:text-birk-text"
-                          />
+                          <Square size={18} className="text-birk-ink-faint hover:text-birk-ink" />
                         )}
                       </button>
                     ) : (
-                      <span className="mt-0.5 text-base flex-shrink-0">
-                        {cfg.emoji}
-                      </span>
+                      <span className="mt-0.5 text-base flex-shrink-0">{cfg.emoji}</span>
                     )}
 
                     <p
                       className={cn(
-                        "flex-1 text-sm text-birk-text",
-                        note.completed && "line-through text-birk-muted"
+                        "flex-1 font-serif text-sm text-birk-ink",
+                        note.completed && "line-through text-birk-ink-faint"
                       )}
                     >
                       {note.content}
@@ -175,7 +160,7 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
 
                     <button
                       onClick={() => handleDelete(note.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-red-50 text-birk-muted hover:text-red-400 transition-all flex-shrink-0"
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-50 text-birk-ink-faint hover:text-red-400 transition-all flex-shrink-0"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -190,11 +175,11 @@ export default function Notes({ trip, notes, onNotesChange }: NotesProps) {
       {notes.length === 0 && (
         <div className="text-center py-10">
           <div className="text-3xl mb-2">📝</div>
-          <p className="text-birk-muted text-sm">
+          <p className="font-hand text-birk-ink-faint text-xl">
             isso aqui vai virar memória 💛
           </p>
-          <p className="text-birk-muted text-xs mt-1">
-            adicione checklists, lembretes e ideias
+          <p className="font-mono text-birk-ink-faint text-[11px] mt-1 uppercase tracking-[0.12em]">
+            checklists · lembretes · ideias
           </p>
         </div>
       )}

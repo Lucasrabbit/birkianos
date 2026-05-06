@@ -8,10 +8,6 @@ interface SunflowerProps {
   style?: React.CSSProperties;
 }
 
-/**
- * Inline hand-drawn sunflower SVG.
- * Yellow petals with a brown center and a tiny green leaf accent.
- */
 export default function SunflowerDecor({
   size = 64,
   rotation = 0,
@@ -45,12 +41,31 @@ export default function SunflowerDecor({
         cy={cy + 32}
         rx={9}
         ry={4}
-        fill="#7FB77E"
+        fill="#5a6b3a"
         opacity={0.85}
         transform={`rotate(35 ${cx + 28} ${cy + 32})`}
       />
 
-      {/* petals */}
+      {/* back row petals (darker) */}
+      <g>
+        {Array.from({ length: petals }).map((_, i) => {
+          const angle = (i / petals) * 360;
+          return (
+            <ellipse
+              key={`back-${i}`}
+              cx={cx}
+              cy={cy - petalDistance}
+              rx={petalRx}
+              ry={petalRy}
+              fill="#e89c1f"
+              transform={`rotate(${angle + 15} ${cx} ${cy})`}
+              opacity={0.85}
+            />
+          );
+        })}
+      </g>
+
+      {/* front row petals */}
       <g>
         {Array.from({ length: petals }).map((_, i) => {
           const angle = (i / petals) * 360;
@@ -61,7 +76,7 @@ export default function SunflowerDecor({
               cy={cy - petalDistance}
               rx={petalRx}
               ry={petalRy}
-              fill={i % 2 === 0 ? "#F4C430" : "#E8A020"}
+              fill={i % 2 === 0 ? "#f2b134" : "#e89c1f"}
               transform={`rotate(${angle} ${cx} ${cy})`}
               opacity={0.95}
             />
@@ -70,7 +85,7 @@ export default function SunflowerDecor({
       </g>
 
       {/* center */}
-      <circle cx={cx} cy={cy} r={14} fill="#6B4C3B" />
+      <circle cx={cx} cy={cy} r={14} fill="#5a3a14" />
       <circle cx={cx} cy={cy} r={14} fill="url(#sunflower-center)" opacity={0.9} />
       {/* tiny seeds */}
       {Array.from({ length: 8 }).map((_, i) => {
@@ -81,7 +96,7 @@ export default function SunflowerDecor({
             cx={cx + Math.cos(a) * 7}
             cy={cy + Math.sin(a) * 7}
             r={1.2}
-            fill="#2C1810"
+            fill="#2b1f12"
             opacity={0.6}
           />
         );
@@ -89,8 +104,8 @@ export default function SunflowerDecor({
 
       <defs>
         <radialGradient id="sunflower-center" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0%" stopColor="#8B6244" />
-          <stop offset="100%" stopColor="#4A2E1A" />
+          <stop offset="0%" stopColor="#3d2509" />
+          <stop offset="100%" stopColor="#5a3a14" />
         </radialGradient>
       </defs>
     </svg>

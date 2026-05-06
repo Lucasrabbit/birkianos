@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Calendar, FileText } from "lucide-react";
+import { MapPin, Calendar } from "lucide-react";
 import { Input, Textarea } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { Trip } from "@/types";
@@ -96,10 +96,7 @@ export default function TripForm({
             onChange={(e) => set("origin", e.target.value)}
             error={errors.origin}
           />
-          <MapPin
-            size={14}
-            className="absolute right-4 top-9 text-birk-yellow"
-          />
+          <MapPin size={14} className="absolute right-4 top-9 text-birk-sun" />
         </div>
         <div className="relative">
           <Input
@@ -109,10 +106,7 @@ export default function TripForm({
             onChange={(e) => set("destination", e.target.value)}
             error={errors.destination}
           />
-          <MapPin
-            size={14}
-            className="absolute right-4 top-9 text-birk-green"
-          />
+          <MapPin size={14} className="absolute right-4 top-9 text-birk-leaf" />
         </div>
       </motion.div>
 
@@ -129,10 +123,7 @@ export default function TripForm({
             value={form.start_date}
             onChange={(e) => set("start_date", e.target.value)}
           />
-          <Calendar
-            size={14}
-            className="absolute right-4 top-9 text-birk-muted pointer-events-none"
-          />
+          <Calendar size={14} className="absolute right-4 top-9 text-birk-ink-faint pointer-events-none" />
         </div>
         <div className="relative">
           <Input
@@ -142,10 +133,7 @@ export default function TripForm({
             onChange={(e) => set("end_date", e.target.value)}
             min={form.start_date}
           />
-          <Calendar
-            size={14}
-            className="absolute right-4 top-9 text-birk-muted pointer-events-none"
-          />
+          <Calendar size={14} className="absolute right-4 top-9 text-birk-ink-faint pointer-events-none" />
         </div>
       </motion.div>
 
@@ -170,21 +158,11 @@ export default function TripForm({
         className="flex gap-3 pt-2"
       >
         {onCancel && (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onCancel}
-            className="flex-1"
-          >
+          <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">
             Cancelar
           </Button>
         )}
-        <Button
-          type="submit"
-          variant="primary"
-          loading={loading}
-          className="flex-1"
-        >
+        <Button type="submit" variant="primary" loading={loading} className="flex-1">
           {submitLabel}
         </Button>
       </motion.div>

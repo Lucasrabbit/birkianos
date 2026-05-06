@@ -36,11 +36,7 @@ interface StopListProps {
   onStopsChange: (stops: Stop[]) => void;
 }
 
-export default function StopList({
-  trip,
-  stops,
-  onStopsChange,
-}: StopListProps) {
+export default function StopList({ trip, stops, onStopsChange }: StopListProps) {
   const [addOpen, setAddOpen] = useState(false);
   const [editStop, setEditStop] = useState<Stop | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -49,17 +45,13 @@ export default function StopList({
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );
 
-  const handleAddStop = async (
-    data: Omit<Stop, "id" | "created_at">
-  ) => {
+  const handleAddStop = async (data: Omit<Stop, "id" | "created_at">) => {
     const newStop = await createStop({ ...data, position: stops.length });
     onStopsChange([...stops, newStop]);
     setAddOpen(false);
   };
 
-  const handleEditStop = async (
-    data: Omit<Stop, "id" | "created_at">
-  ) => {
+  const handleEditStop = async (data: Omit<Stop, "id" | "created_at">) => {
     if (!editStop) return;
     const updated = await updateStop(editStop.id, data);
     onStopsChange(stops.map((s) => (s.id === editStop.id ? updated : s)));
@@ -68,10 +60,9 @@ export default function StopList({
 
   const handleDeleteStop = async (id: string) => {
     await deleteStop(id);
-    const remaining = stops.filter((s) => s.id !== id).map((s, i) => ({
-      ...s,
-      position: i,
-    }));
+    const remaining = stops
+      .filter((s) => s.id !== id)
+      .map((s, i) => ({ ...s, position: i }));
     await reorderStops(remaining.map((s) => ({ id: s.id, position: s.position })));
     onStopsChange(remaining);
   };
@@ -117,7 +108,7 @@ export default function StopList({
                 className="text-center py-12"
               >
                 <div className="text-4xl mb-3">🗺️</div>
-                <p className="text-birk-muted text-sm">
+                <p className="font-serif text-birk-ink-faint text-sm italic">
                   nenhuma parada ainda… bora começar?
                 </p>
               </motion.div>
@@ -154,22 +145,15 @@ export default function StopList({
         transition={{ delay: 0.3 }}
         className="pt-2"
       >
-        <Button
-          variant="secondary"
+        <button
           onClick={() => setAddOpen(true)}
-          className="w-full gap-2 border-dashed border-2 border-birk-border/70 hover:border-birk-yellow"
+          className="w-full py-3.5 border-[1.5px] border-dashed border-birk-ink-faint text-birk-ink-soft rounded font-hand text-xl transition-all hover:border-birk-terra hover:text-birk-terra hover:bg-birk-paper-deep/40 cursor-pointer"
         >
-          <Plus size={16} />
-          adicionar uma parada ✨
-        </Button>
+          + adicionar uma parada nossa
+        </button>
       </motion.div>
 
-      <Modal
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        title="Nova parada"
-        size="lg"
-      >
+      <Modal open={addOpen} onClose={() => setAddOpen(false)} title="Nova parada" size="lg">
         <StopForm
           tripId={trip.id}
           position={stops.length}
@@ -178,12 +162,7 @@ export default function StopList({
         />
       </Modal>
 
-      <Modal
-        open={!!editStop}
-        onClose={() => setEditStop(null)}
-        title="Editar parada"
-        size="lg"
-      >
+      <Modal open={!!editStop} onClose={() => setEditStop(null)} title="Editar parada" size="lg">
         {editStop && (
           <StopForm
             initial={editStop}

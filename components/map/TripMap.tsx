@@ -67,44 +67,31 @@ export default function TripMap({ trip, stops }: TripMapProps) {
       setLoading(true);
       const pts: GeoPoint[] = [];
 
-      const originCoords = trip.origin_lat && trip.origin_lng
-        ? { lat: trip.origin_lat, lng: trip.origin_lng }
-        : await geocode(trip.origin);
+      const originCoords =
+        trip.origin_lat && trip.origin_lng
+          ? { lat: trip.origin_lat, lng: trip.origin_lng }
+          : await geocode(trip.origin);
       if (originCoords) {
         pts.push({ ...originCoords, label: trip.origin, type: "origin" });
       }
 
       for (const stop of stops) {
         if (stop.lat && stop.lng) {
-          pts.push({
-            lat: stop.lat,
-            lng: stop.lng,
-            label: stop.name,
-            type: "stop",
-            stopType: stop.type,
-          });
+          pts.push({ lat: stop.lat, lng: stop.lng, label: stop.name, type: "stop", stopType: stop.type });
         } else if (stop.address || stop.name) {
           const coords = await geocode(stop.address ?? stop.name);
           if (coords) {
-            pts.push({
-              ...coords,
-              label: stop.name,
-              type: "stop",
-              stopType: stop.type,
-            });
+            pts.push({ ...coords, label: stop.name, type: "stop", stopType: stop.type });
           }
         }
       }
 
-      const destCoords = trip.destination_lat && trip.destination_lng
-        ? { lat: trip.destination_lat, lng: trip.destination_lng }
-        : await geocode(trip.destination);
+      const destCoords =
+        trip.destination_lat && trip.destination_lng
+          ? { lat: trip.destination_lat, lng: trip.destination_lng }
+          : await geocode(trip.destination);
       if (destCoords) {
-        pts.push({
-          ...destCoords,
-          label: trip.destination,
-          type: "destination",
-        });
+        pts.push({ ...destCoords, label: trip.destination, type: "destination" });
       }
 
       setPoints(pts);
@@ -116,10 +103,10 @@ export default function TripMap({ trip, stops }: TripMapProps) {
 
   if (loading || !MapComponents || !L) {
     return (
-      <div className="w-full h-96 rounded-2xl bg-birk-bg flex items-center justify-center">
+      <div className="w-full h-96 bg-birk-paper-deep flex items-center justify-center" style={{ borderRadius: "4px" }}>
         <div className="text-center">
           <div className="text-3xl mb-2">🗺️</div>
-          <p className="text-birk-muted text-sm">carregando mapa…</p>
+          <p className="font-serif text-birk-ink-faint text-sm italic">carregando mapa…</p>
         </div>
       </div>
     );
@@ -127,10 +114,10 @@ export default function TripMap({ trip, stops }: TripMapProps) {
 
   if (points.length === 0) {
     return (
-      <div className="w-full h-96 rounded-2xl bg-birk-bg flex items-center justify-center">
+      <div className="w-full h-96 bg-birk-paper-deep flex items-center justify-center" style={{ borderRadius: "4px" }}>
         <div className="text-center">
           <div className="text-3xl mb-2">📍</div>
-          <p className="text-birk-muted text-sm">
+          <p className="font-serif text-birk-ink-faint text-sm italic">
             adicione paradas para ver o mapa
           </p>
         </div>
@@ -139,7 +126,6 @@ export default function TripMap({ trip, stops }: TripMapProps) {
   }
 
   const { MapContainer, TileLayer, Marker, Popup, Polyline } = MapComponents;
-
   const center = points[Math.floor(points.length / 2)];
   const polylinePoints = points.map((p) => [p.lat, p.lng] as [number, number]);
 
@@ -147,8 +133,8 @@ export default function TripMap({ trip, stops }: TripMapProps) {
     return L.divIcon({
       html: `<div style="
         width:34px;height:34px;border-radius:50%;
-        background:${color};border:3px solid white;
-        box-shadow:0 2px 8px rgba(0,0,0,0.2);
+        background:${color};border:2px solid #2b1f12;
+        box-shadow:2px 2px 0 #2b1f12;
         display:flex;align-items:center;justify-content:center;
         font-size:16px;line-height:1;
       ">${emoji}</div>`,
@@ -159,14 +145,14 @@ export default function TripMap({ trip, stops }: TripMapProps) {
   };
 
   const getIcon = (pt: GeoPoint) => {
-    if (pt.type === "origin") return makeIcon("🟡", "#F4C430");
-    if (pt.type === "destination") return makeIcon("🟢", "#7FB77E");
+    if (pt.type === "origin") return makeIcon("🟡", "#f2b134");
+    if (pt.type === "destination") return makeIcon("🟢", "#5a6b3a");
     const cfg = STOP_TYPE_CONFIG[pt.stopType!];
-    return makeIcon(cfg.emoji, "#A8DADC");
+    return makeIcon(cfg.emoji, "#fde9a8");
   };
 
   return (
-    <div className="w-full h-[28rem] rounded-2xl overflow-hidden shadow-soft border border-birk-border">
+    <div className="w-full h-[28rem] overflow-hidden shadow-soft border border-birk-edge" style={{ borderRadius: "4px" }}>
       <MapContainer
         center={[center.lat, center.lng]}
         zoom={9}
@@ -179,7 +165,7 @@ export default function TripMap({ trip, stops }: TripMapProps) {
         />
         <Polyline
           positions={polylinePoints}
-          pathOptions={{ color: "#F4C430", weight: 3, dashArray: "8,6", opacity: 0.8 }}
+          pathOptions={{ color: "#b4533a", weight: 3, dashArray: "2 6", opacity: 0.8 }}
         />
         {points.map((pt, i) => (
           <Marker key={i} position={[pt.lat, pt.lng]} icon={getIcon(pt)}>
