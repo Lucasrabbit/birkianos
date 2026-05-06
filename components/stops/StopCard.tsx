@@ -46,7 +46,14 @@ export default function StopCard({
   return (
     <motion.div
       ref={setNodeRef}
-      style={{ ...style, transformOrigin: "center bottom" }}
+      style={{
+        ...style,
+        background: "rgba(255,251,240,0.7)",
+        border: "1px solid #d9c79c",
+        padding: "14px 18px",
+        borderRadius: "4px",
+        transformOrigin: "center bottom",
+      }}
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -56,14 +63,6 @@ export default function StopCard({
         "stop-item-card transition-all duration-200",
         isSortableDragging && "opacity-50 scale-[1.02] z-50"
       )}
-      style={{
-        ...style,
-        background: "rgba(255,251,240,0.7)",
-        border: "1px solid #d9c79c",
-        padding: "14px 18px",
-        borderRadius: "4px",
-        transformOrigin: "center bottom",
-      }}
     >
       <div className="flex items-start gap-3">
         <button
