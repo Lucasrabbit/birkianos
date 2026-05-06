@@ -106,7 +106,7 @@ export default function StopForm({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08 }}
       >
-        <label className="text-sm font-medium text-birk-text block mb-2">
+        <label className="text-sm font-serif text-birk-ink block mb-2">
           Tipo
         </label>
         <div className="grid grid-cols-3 gap-2">
@@ -118,14 +118,14 @@ export default function StopForm({
                 type="button"
                 onClick={() => set("type", t)}
                 className={cn(
-                  "flex flex-col items-center gap-1 p-3 rounded-2xl border-2 transition-all text-xs font-medium cursor-pointer",
+                  "flex flex-col items-center gap-1 p-3 rounded border-2 transition-all text-xs cursor-pointer",
                   form.type === t
-                    ? "border-birk-yellow bg-birk-yellow-soft text-birk-text"
-                    : "border-birk-border bg-white text-birk-muted hover:border-birk-yellow/50"
+                    ? "border-birk-sun bg-birk-sun-pale text-birk-ink font-serif"
+                    : "border-birk-edge bg-white/70 text-birk-ink-faint hover:border-birk-sun/50"
                 )}
               >
                 <span className="text-xl">{cfg.emoji}</span>
-                <span>{cfg.label}</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.1em]">{cfg.label}</span>
               </button>
             );
           })}
@@ -217,21 +217,11 @@ export default function StopForm({
         className="flex gap-3 pt-1"
       >
         {onCancel && (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onCancel}
-            className="flex-1"
-          >
+          <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">
             Cancelar
           </Button>
         )}
-        <Button
-          type="submit"
-          variant="primary"
-          loading={loading}
-          className="flex-1"
-        >
+        <Button type="submit" variant="primary" loading={loading} className="flex-1">
           {submitLabel}
         </Button>
       </motion.div>

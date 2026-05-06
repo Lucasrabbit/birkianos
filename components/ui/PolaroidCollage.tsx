@@ -36,13 +36,13 @@ function Polaroid({ src, caption, rotation, delay, className = "", size = "md" }
           backgroundImage: `url(${src})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundColor: "#E8D5C4",
+          backgroundColor: "#d9c79c",
         }}
       />
       {caption && (
         <p
-          className="font-hand text-birk-text text-center mt-2"
-          style={{ fontSize: "1.05rem", fontWeight: 600, lineHeight: 1.1 }}
+          className="font-hand text-birk-ink text-center mt-2"
+          style={{ fontSize: "1.1rem", fontWeight: 600, lineHeight: 1.1 }}
         >
           {caption}
         </p>
@@ -54,7 +54,6 @@ function Polaroid({ src, caption, rotation, delay, className = "", size = "md" }
 export default function PolaroidCollage() {
   const photos = BACKGROUND_PHOTOS.slice(0, 5);
 
-  // Posições e rotações artesanais — cada polaroid em uma "esquina"
   const positions = [
     { className: "top-[8%] left-[6%]", rotation: -9, delay: 0.4, size: "md" as const },
     { className: "top-[12%] right-[7%]", rotation: 7, delay: 0.55, size: "md" as const },

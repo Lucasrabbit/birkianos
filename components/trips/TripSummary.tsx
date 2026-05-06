@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { motion, useMotionValue, animate } from "framer-motion";
 import { MapPin, Clock, Navigation, Sun } from "lucide-react";
 import { TripSummaryData } from "@/types";
 import { formatDuration } from "@/lib/utils";
@@ -39,29 +39,29 @@ export default function TripSummary({ data }: TripSummaryProps) {
       icon: Navigation,
       label: "distância",
       value: data.totalKm > 0 ? <><CountUp to={data.totalKm} format={(n) => `~${Math.round(n)}`} />km</> : "—",
-      color: "text-blue-500",
-      bg: "bg-blue-50",
+      color: "text-birk-sky",
+      bg: "bg-birk-sky/20",
     },
     {
       icon: Clock,
       label: "na estrada",
       value: data.totalMinutes > 0 ? formatDuration(data.totalMinutes) : "—",
-      color: "text-birk-green",
-      bg: "bg-birk-green/10",
+      color: "text-birk-leaf",
+      bg: "bg-birk-leaf/10",
     },
     {
       icon: MapPin,
       label: "paradas",
       value: <CountUp to={data.stopsCount} />,
-      color: "text-birk-yellow",
-      bg: "bg-birk-yellow/10",
+      color: "text-birk-sun",
+      bg: "bg-birk-sun/15",
     },
     {
       icon: Sun,
       label: "dias",
       value: <CountUp to={data.days} />,
-      color: "text-orange-400",
-      bg: "bg-orange-50",
+      color: "text-birk-terra",
+      bg: "bg-birk-terra/10",
     },
   ];
 
@@ -76,12 +76,12 @@ export default function TripSummary({ data }: TripSummaryProps) {
           className="glass-card p-4 text-center"
         >
           <div
-            className={`w-9 h-9 rounded-xl ${item.bg} flex items-center justify-center mx-auto mb-2`}
+            className={`w-9 h-9 rounded ${item.bg} flex items-center justify-center mx-auto mb-2`}
           >
             <item.icon size={16} className={item.color} />
           </div>
-          <div className="text-xl font-bold text-birk-text">{item.value}</div>
-          <div className="text-xs text-birk-muted mt-0.5 font-hand text-base">{item.label}</div>
+          <div className="font-serif text-xl text-birk-ink italic">{item.value}</div>
+          <div className="font-mono text-[10px] text-birk-ink-faint mt-0.5 uppercase tracking-[0.14em]">{item.label}</div>
         </motion.div>
       ))}
     </div>

@@ -19,37 +19,37 @@ export default function PrintLayout({ trip, stops, notes }: PrintLayoutProps) {
       <style>{`
         @media print {
           body { margin: 0; padding: 0; background: white; }
-          .print-layout { padding: 24px; max-width: 800px; margin: 0 auto; font-family: 'Inter', sans-serif; color: #2B2B2B; }
+          .print-layout { padding: 24px; max-width: 800px; margin: 0 auto; font-family: 'Fraunces', Georgia, serif; color: #2b1f12; }
           .no-print { display: none !important; }
           @page { margin: 20mm; }
         }
         @media screen {
-          .print-layout { padding: 40px; max-width: 800px; margin: 0 auto; font-family: 'Inter', sans-serif; color: #2B2B2B; background: white; min-height: 100vh; }
+          .print-layout { padding: 40px; max-width: 800px; margin: 0 auto; font-family: 'Fraunces', Georgia, serif; color: #2b1f12; background: white; min-height: 100vh; }
         }
         .print-layout * { box-sizing: border-box; }
-        .print-layout h1 { font-size: 28px; font-weight: 800; margin: 0 0 4px 0; }
-        .print-layout h2 { font-size: 16px; font-weight: 700; margin: 24px 0 12px 0; border-bottom: 2px solid #F4C430; padding-bottom: 6px; }
+        .print-layout h1 { font-size: 28px; font-weight: 600; font-style: italic; margin: 0 0 4px 0; }
+        .print-layout h2 { font-size: 16px; font-weight: 500; font-style: italic; margin: 24px 0 12px 0; border-bottom: 2px solid #f2b134; padding-bottom: 6px; }
         .print-layout h3 { font-size: 14px; font-weight: 600; margin: 0 0 4px 0; }
         .print-layout p { margin: 0; }
-        .header { margin-bottom: 28px; border-bottom: 3px solid #F4C430; padding-bottom: 20px; }
-        .header-sub { color: #8A8A8A; font-size: 14px; margin-top: 4px; }
-        .route { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-top: 12px; }
-        .route-arrow { color: #F4C430; }
+        .header { margin-bottom: 28px; border-bottom: 3px solid #f2b134; padding-bottom: 20px; }
+        .header-sub { color: #8b7350; font-size: 14px; margin-top: 4px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; }
+        .route { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; margin-top: 12px; font-style: italic; }
+        .route-arrow { color: #b4533a; }
         .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
-        .summary-item { text-align: center; border: 1px solid #EBEBEB; border-radius: 12px; padding: 12px 8px; }
-        .summary-value { font-size: 22px; font-weight: 800; }
-        .summary-label { font-size: 11px; color: #8A8A8A; margin-top: 2px; }
-        .stop-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0F0F0; }
-        .stop-number { width: 28px; height: 28px; border-radius: 50%; background: #FFF3B0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+        .summary-item { text-align: center; border: 1px solid #d9c79c; border-radius: 4px; padding: 12px 8px; background: #fffbf0; }
+        .summary-value { font-size: 22px; font-weight: 600; font-style: italic; }
+        .summary-label { font-size: 10px; color: #8b7350; margin-top: 2px; font-family: 'DM Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+        .stop-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #d9c79c; }
+        .stop-number { width: 28px; height: 28px; border-radius: 50%; background: #f2b134; border: 2px solid #2b1f12; box-shadow: 2px 2px 0 #2b1f12; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; font-style: italic; flex-shrink: 0; }
         .stop-content { flex: 1; }
-        .stop-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 12px; color: #8A8A8A; }
-        .stop-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; padding: 2px 8px; border-radius: 8px; background: #F5F5F5; }
-        .stop-detail { margin-top: 6px; font-size: 12px; color: #555; font-style: italic; }
+        .stop-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 11px; color: #8b7350; font-family: 'DM Mono', monospace; letter-spacing: 0.08em; }
+        .stop-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 2px 8px; border-radius: 100px; background: #fde9a8; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+        .stop-detail { margin-top: 6px; font-size: 12px; color: #5a4630; font-style: italic; }
         .note-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 13px; }
-        .checkbox { width: 16px; height: 16px; border: 2px solid #EBEBEB; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
-        .annotation-block { border: 1px solid #EBEBEB; border-radius: 12px; padding: 12px; margin-top: 8px; }
-        .annotation-lines { border-bottom: 1px solid #F0F0F0; margin-top: 8px; height: 24px; }
-        .footer { margin-top: 40px; padding-top: 16px; border-top: 2px solid #F4C430; text-align: center; color: #8A8A8A; font-size: 12px; font-style: italic; }
+        .checkbox { width: 16px; height: 16px; border: 2px solid #d9c79c; border-radius: 2px; flex-shrink: 0; margin-top: 1px; }
+        .annotation-block { border: 1px solid #d9c79c; border-radius: 4px; padding: 12px; margin-top: 8px; background: #fffbf0; }
+        .annotation-lines { border-bottom: 1px solid #ecdfc3; margin-top: 8px; height: 24px; }
+        .footer { margin-top: 40px; padding-top: 16px; border-top: 2px solid #f2b134; text-align: center; color: #8b7350; font-size: 12px; font-style: italic; }
       `}</style>
 
       <div className="header">
@@ -99,8 +99,8 @@ export default function PrintLayout({ trip, stops, notes }: PrintLayoutProps) {
         <>
           <h2>🗺️ Roteiro</h2>
           <div style={{ marginBottom: "24px" }}>
-            <div className="stop-item" style={{ borderBottom: "2px solid #F4C430" }}>
-              <div className="stop-number" style={{ background: "#F4C430" }}>🟡</div>
+            <div className="stop-item" style={{ borderBottom: "2px solid #f2b134" }}>
+              <div className="stop-number" style={{ background: "#f2b134" }}>🟡</div>
               <div className="stop-content">
                 <h3>{trip.origin}</h3>
                 <div className="stop-meta">Ponto de partida</div>
@@ -115,30 +115,20 @@ export default function PrintLayout({ trip, stops, notes }: PrintLayoutProps) {
                   <div className="stop-content">
                     <h3>{stop.name}</h3>
                     <div className="stop-meta">
-                      <span className="stop-badge">
-                        {cfg.emoji} {cfg.label}
-                      </span>
+                      <span className="stop-badge">{cfg.emoji} {cfg.label}</span>
                       {stop.arrival_time && <span>⏰ {stop.arrival_time}</span>}
-                      {stop.duration_minutes && (
-                        <span>🕐 {formatDuration(stop.duration_minutes)}</span>
-                      )}
+                      {stop.duration_minutes && <span>🕐 {formatDuration(stop.duration_minutes)}</span>}
                       {stop.address && <span>📍 {stop.address}</span>}
                     </div>
-                    {stop.comment && (
-                      <p className="stop-detail">{stop.comment}</p>
-                    )}
-                    {stop.expected_moment && (
-                      <p className="stop-detail">
-                        💛 "{stop.expected_moment}"
-                      </p>
-                    )}
+                    {stop.comment && <p className="stop-detail">{stop.comment}</p>}
+                    {stop.expected_moment && <p className="stop-detail">💛 &ldquo;{stop.expected_moment}&rdquo;</p>}
                   </div>
                 </div>
               );
             })}
 
             <div className="stop-item" style={{ borderBottom: "none" }}>
-              <div className="stop-number" style={{ background: "#7FB77E" }}>🟢</div>
+              <div className="stop-number" style={{ background: "#5a6b3a", color: "#f5ecd9" }}>🟢</div>
               <div className="stop-content">
                 <h3>{trip.destination}</h3>
                 <div className="stop-meta">Destino final</div>
@@ -200,14 +190,14 @@ export default function PrintLayout({ trip, stops, notes }: PrintLayoutProps) {
       {trip.observations && (
         <>
           <h2>📌 Observações</h2>
-          <p style={{ fontSize: "13px", color: "#555" }}>{trip.observations}</p>
+          <p style={{ fontSize: "13px", color: "#5a4630" }}>{trip.observations}</p>
         </>
       )}
 
       <div className="footer">
         <p>{BRAND_PHRASE}</p>
         <p style={{ marginTop: "4px", fontSize: "11px" }}>
-          Birk&apos;s Trip · Lucas & Rox
+          Birkianos Trips · Lucas &amp; Rox
         </p>
       </div>
     </div>

@@ -61,14 +61,14 @@ export default function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 16 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={`relative w-full ${sizeClasses[size]} bg-white rounded-3xl shadow-2xl overflow-hidden`}
+            className={`relative w-full ${sizeClasses[size]} bg-birk-paper rounded shadow-2xl overflow-hidden border border-birk-edge`}
           >
             {title && (
-              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-birk-border">
-                <h2 className="text-lg font-semibold text-birk-text">{title}</h2>
+              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-birk-edge">
+                <h2 className="font-serif text-lg text-birk-ink italic">{title}</h2>
                 <button
                   onClick={onClose}
-                  className="p-2 rounded-xl hover:bg-birk-bg text-birk-muted hover:text-birk-text transition-colors"
+                  className="p-2 rounded hover:bg-birk-paper-deep text-birk-ink-faint hover:text-birk-ink transition-colors"
                 >
                   <X size={18} />
                 </button>
@@ -77,7 +77,7 @@ export default function Modal({
             {!title && (
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-xl hover:bg-birk-bg text-birk-muted hover:text-birk-text transition-colors z-10"
+                className="absolute top-4 right-4 p-2 rounded hover:bg-birk-paper-deep text-birk-ink-faint hover:text-birk-ink transition-colors z-10"
               >
                 <X size={18} />
               </button>

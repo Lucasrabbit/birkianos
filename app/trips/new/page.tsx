@@ -5,22 +5,23 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TripForm from "@/components/trips/TripForm";
+import Topbar from "@/components/ui/Topbar";
 import { createTrip } from "@/lib/supabase";
 import { Trip } from "@/types";
 
 export default function NewTripPage() {
   const router = useRouter();
 
-  const handleSubmit = async (
-    data: Omit<Trip, "id" | "created_at" | "updated_at">
-  ) => {
+  const handleSubmit = async (data: Omit<Trip, "id" | "created_at" | "updated_at">) => {
     const trip = await createTrip(data);
     router.push(`/trips/${trip.id}`);
   };
 
   return (
-    <div className="min-h-screen bg-birk-bg">
-      <div className="max-w-xl mx-auto px-4 py-8">
+    <div className="min-h-screen paper-bg">
+      <Topbar />
+
+      <div className="max-w-xl mx-auto px-6 py-10">
         <motion.div
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
@@ -28,19 +29,21 @@ export default function NewTripPage() {
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-birk-muted hover:text-birk-text text-sm transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-birk-ink-faint hover:text-birk-ink text-sm transition-colors mb-6"
           >
             <ArrowLeft size={16} />
-            voltar
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em]">voltar</span>
           </Link>
 
-          <div className="flex items-center gap-3 mb-1">
-            <span className="text-3xl">✈️</span>
-            <h1 className="text-2xl font-bold text-birk-text">
-              nova viagem
-            </h1>
-          </div>
-          <p className="text-birk-muted text-sm">
+          <div className="eyebrow mb-3">novo capítulo</div>
+
+          <h1
+            className="font-serif text-birk-ink italic"
+            style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 300, lineHeight: 1.1 }}
+          >
+            pra onde vamos<br />dessa vez?
+          </h1>
+          <p className="font-hand text-birk-ink-faint text-xl mt-2">
             vamos montar nosso caminho 💛
           </p>
         </motion.div>
@@ -49,7 +52,7 @@ export default function NewTripPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-3xl shadow-card p-6 border border-birk-border/50"
+          className="glass-card p-6"
         >
           <TripForm onSubmit={handleSubmit} />
         </motion.div>

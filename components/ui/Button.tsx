@@ -24,29 +24,36 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const base =
-      "inline-flex items-center justify-center gap-2 font-medium rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
+      "inline-flex items-center justify-center gap-2 font-serif rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
 
     const variants = {
       primary:
-        "bg-birk-yellow text-birk-text hover:bg-yellow-400 shadow-soft active:scale-95",
+        "bg-birk-ink text-birk-paper hover:bg-birk-ink-soft active:scale-95",
       secondary:
-        "bg-white text-birk-text border border-birk-border hover:bg-birk-bg shadow-soft active:scale-95",
+        "bg-birk-paper text-birk-ink border border-birk-edge hover:bg-birk-paper-deep shadow-soft active:scale-95",
       ghost:
-        "bg-transparent text-birk-muted hover:text-birk-text hover:bg-birk-bg active:scale-95",
+        "bg-transparent text-birk-ink-soft hover:text-birk-ink hover:bg-birk-paper active:scale-95",
       danger:
         "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 active:scale-95",
     };
 
     const sizes = {
-      sm: "text-sm px-3 py-1.5",
-      md: "text-sm px-4 py-2.5",
+      sm: "text-sm px-4 py-2",
+      md: "text-sm px-5 py-2.5",
       lg: "text-base px-6 py-3",
     };
+
+    const hoverAnimation =
+      variant === "primary" && !disabled && !loading
+        ? { x: -1, y: -2, boxShadow: "3px 5px 0 #b4533a" }
+        : variant === "secondary" && !disabled && !loading
+        ? { y: -1 }
+        : {};
 
     return (
       <motion.button
         ref={ref}
-        whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
+        whileHover={hoverAnimation}
         whileTap={{ scale: disabled || loading ? 1 : 0.97 }}
         className={cn(base, variants[variant], sizes[size], className)}
         disabled={disabled || loading}

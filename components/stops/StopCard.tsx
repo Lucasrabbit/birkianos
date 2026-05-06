@@ -43,145 +43,145 @@ export default function StopCard({
 
   const hasExtra = stop.comment || stop.why_here || stop.expected_moment;
 
-  // Soft tilt (-1° .. +1°) per card for scrapbook feel
-  const tilt = ((index % 3) - 1) * 0.8;
-
   return (
     <motion.div
       ref={setNodeRef}
       style={{ ...style, transformOrigin: "center bottom" }}
-      initial={{ opacity: 0, y: 16, rotate: tilt * 0.5 }}
-      whileInView={{ opacity: 1, y: 0, rotate: tilt }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ delay: index * 0.06, duration: 0.5, ease: "easeOut" }}
-      whileHover={{ y: -3, rotate: 0 }}
+      whileHover={{ translateX: 4 }}
       className={cn(
-        "glass-card transition-all duration-200",
+        "stop-item-card transition-all duration-200",
         isSortableDragging && "opacity-50 scale-[1.02] z-50"
       )}
+      style={{
+        ...style,
+        background: "rgba(255,251,240,0.7)",
+        border: "1px solid #d9c79c",
+        padding: "14px 18px",
+        borderRadius: "4px",
+        transformOrigin: "center bottom",
+      }}
     >
-      <div className="p-4">
-        <div className="flex items-start gap-3">
-          <button
-            {...attributes}
-            {...listeners}
-            className="mt-1 p-1 rounded-lg text-birk-muted hover:text-birk-text hover:bg-birk-bg cursor-grab active:cursor-grabbing transition-colors flex-shrink-0"
-            aria-label="Arrastar para reordenar"
-          >
-            <GripVertical size={16} />
-          </button>
+      <div className="flex items-start gap-3">
+        <button
+          {...attributes}
+          {...listeners}
+          className="mt-1 p-1 rounded text-birk-ink-faint hover:text-birk-ink hover:bg-birk-paper cursor-grab active:cursor-grabbing transition-colors flex-shrink-0"
+          aria-label="Arrastar para reordenar"
+        >
+          <GripVertical size={16} />
+        </button>
 
-          <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-birk-yellow-soft text-birk-text font-bold text-sm flex-shrink-0">
-            {index + 1}
-          </div>
+        {/* Stop pin */}
+        <div className="stop-pin mt-0.5" style={{ marginTop: "4px" }}>
+          {index + 1}
+        </div>
 
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-semibold text-birk-text text-sm truncate">
-                    {stop.name}
-                  </span>
-                  <StopBadge type={stop.type} />
-                </div>
-
-                <div className="flex items-center gap-3 mt-1 text-xs text-birk-muted flex-wrap">
-                  {stop.arrival_time && (
-                    <span className="flex items-center gap-1">
-                      <Clock size={11} />
-                      {stop.arrival_time}
-                    </span>
-                  )}
-                  {stop.duration_minutes && (
-                    <span className="flex items-center gap-1">
-                      <Clock size={11} />
-                      {formatDuration(stop.duration_minutes)}
-                    </span>
-                  )}
-                  {stop.address && (
-                    <span className="flex items-center gap-1 truncate">
-                      <MapPin size={11} />
-                      {stop.address}
-                    </span>
-                  )}
-                </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-serif text-birk-ink text-base">
+                  {stop.name}
+                </span>
+                <StopBadge type={stop.type} />
               </div>
 
-              <div className="flex items-center gap-1 flex-shrink-0">
-                {hasExtra && (
-                  <button
-                    onClick={() => setExpanded((v) => !v)}
-                    className="p-1.5 rounded-xl hover:bg-birk-bg text-birk-muted hover:text-birk-text transition-colors"
-                  >
-                    {expanded ? (
-                      <ChevronUp size={14} />
-                    ) : (
-                      <ChevronDown size={14} />
-                    )}
-                  </button>
+              <div className="flex items-center gap-3 mt-1 font-mono text-[11px] text-birk-ink-faint flex-wrap tracking-[0.08em]">
+                {stop.arrival_time && (
+                  <span className="flex items-center gap-1">
+                    <Clock size={11} />
+                    {stop.arrival_time}
+                  </span>
                 )}
-                {onEdit && (
-                  <button
-                    onClick={() => onEdit(stop)}
-                    className="p-1.5 rounded-xl hover:bg-birk-bg text-birk-muted hover:text-birk-text transition-colors"
-                  >
-                    <Edit2 size={14} />
-                  </button>
+                {stop.duration_minutes && (
+                  <span className="flex items-center gap-1">
+                    <Clock size={11} />
+                    {formatDuration(stop.duration_minutes)}
+                  </span>
                 )}
-                {onDelete && (
-                  <button
-                    onClick={() => onDelete(stop.id)}
-                    className="p-1.5 rounded-xl hover:bg-red-50 text-birk-muted hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                {stop.address && (
+                  <span className="flex items-center gap-1 truncate">
+                    <MapPin size={11} />
+                    {stop.address}
+                  </span>
                 )}
               </div>
             </div>
+
+            <div className="flex items-center gap-1 flex-shrink-0">
+              {hasExtra && (
+                <button
+                  onClick={() => setExpanded((v) => !v)}
+                  className="p-1.5 rounded hover:bg-birk-paper text-birk-ink-faint hover:text-birk-ink transition-colors"
+                >
+                  {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+              )}
+              {onEdit && (
+                <button
+                  onClick={() => onEdit(stop)}
+                  className="p-1.5 rounded hover:bg-birk-paper text-birk-ink-faint hover:text-birk-ink transition-colors"
+                >
+                  <Edit2 size={14} />
+                </button>
+              )}
+              {onDelete && (
+                <button
+                  onClick={() => onDelete(stop.id)}
+                  className="p-1.5 rounded hover:bg-red-50 text-birk-ink-faint hover:text-red-500 transition-colors"
+                >
+                  <Trash2 size={14} />
+                </button>
+              )}
+            </div>
           </div>
         </div>
-
-        <AnimatePresence>
-          {expanded && hasExtra && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <div className="ml-[3.75rem] mt-3 space-y-2 pt-3 border-t border-birk-border">
-                {stop.comment && (
-                  <div>
-                    <p className="text-xs font-medium text-birk-muted mb-0.5">
-                      Comentários
-                    </p>
-                    <p className="text-sm text-birk-text">{stop.comment}</p>
-                  </div>
-                )}
-                {stop.why_here && (
-                  <div>
-                    <p className="text-xs font-medium text-birk-muted mb-0.5">
-                      Por que esse lugar entrou?
-                    </p>
-                    <p className="text-sm text-birk-text">{stop.why_here}</p>
-                  </div>
-                )}
-                {stop.expected_moment && (
-                  <div>
-                    <p className="text-xs font-medium text-birk-muted mb-0.5">
-                      Momento esperado 💛
-                    </p>
-                    <p className="text-sm text-birk-text italic">
-                      "{stop.expected_moment}"
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {expanded && hasExtra && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="ml-[3.75rem] mt-3 space-y-2 pt-3 border-t border-birk-edge">
+              {stop.comment && (
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-birk-ink-faint mb-0.5">
+                    Comentários
+                  </p>
+                  <p className="font-serif text-sm text-birk-ink">{stop.comment}</p>
+                </div>
+              )}
+              {stop.why_here && (
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-birk-ink-faint mb-0.5">
+                    Por que esse lugar entrou?
+                  </p>
+                  <p className="font-serif text-sm text-birk-ink">{stop.why_here}</p>
+                </div>
+              )}
+              {stop.expected_moment && (
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-birk-ink-faint mb-0.5">
+                    Momento esperado 💛
+                  </p>
+                  <p className="font-serif text-sm text-birk-ink italic">
+                    &ldquo;{stop.expected_moment}&rdquo;
+                  </p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
