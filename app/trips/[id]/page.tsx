@@ -53,6 +53,7 @@ export default function TripPage({ params }: { params: Promise<{ id: string }> }
           setNotes(data.notes ?? []);
         }
       })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [id]);
 
