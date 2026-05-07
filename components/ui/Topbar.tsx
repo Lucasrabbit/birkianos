@@ -2,14 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Topbar() {
   const pathname = usePathname();
+  const [vol, setVol] = useState("VOL. 07");
 
-  const vol = `VOL. 07 · ${new Date().toLocaleDateString("pt-BR", {
-    month: "short",
-    year: "2-digit",
-  }).toUpperCase()}`;
+  useEffect(() => {
+    const stamp = new Date().toLocaleDateString("pt-BR", {
+      month: "short",
+      year: "2-digit",
+    }).toUpperCase();
+    setVol(`VOL. 07 · ${stamp}`);
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 bg-birk-paper/90 backdrop-blur-sm border-b border-birk-edge/40">
