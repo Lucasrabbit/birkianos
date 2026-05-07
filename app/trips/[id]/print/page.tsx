@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Printer, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -9,8 +9,8 @@ import { getTripById } from "@/lib/supabase";
 import PrintLayout from "@/components/print/PrintLayout";
 import Button from "@/components/ui/Button";
 
-export default function PrintPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function PrintPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [trip, setTrip] = useState<Trip | null>(null);
   const [stops, setStops] = useState<Stop[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);

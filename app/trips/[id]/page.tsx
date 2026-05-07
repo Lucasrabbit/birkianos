@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, MapPin, ArrowRight, Printer, Edit2 } from "lucide-react";
 import Link from "next/link";
@@ -35,8 +35,8 @@ const TripMap = dynamic(() => import("@/components/map/TripMap"), {
 
 type LeftTab = "roteiro" | "timeline";
 
-export default function TripPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function TripPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [trip, setTrip] = useState<Trip | null>(null);
   const [stops, setStops] = useState<Stop[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
