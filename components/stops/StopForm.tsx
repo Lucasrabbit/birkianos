@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Input, Textarea } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import PlaceAutocomplete from "@/components/ui/PlaceAutocomplete";
 import { Stop, StopType } from "@/types";
 import { STOP_TYPE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -43,6 +44,8 @@ export default function StopForm({
     why_here: initial?.why_here ?? "",
     expected_moment: initial?.expected_moment ?? "",
     address: initial?.address ?? "",
+    lat: initial?.lat,
+    lng: initial?.lng,
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -74,6 +77,8 @@ export default function StopForm({
         why_here: form.why_here.trim() || undefined,
         expected_moment: form.expected_moment.trim() || undefined,
         address: form.address.trim() || undefined,
+        lat: form.lat,
+        lng: form.lng,
       });
     } finally {
       setLoading(false);
@@ -137,12 +142,29 @@ export default function StopForm({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.12 }}
       >
-        <Input
+        <PlaceAutocomplete
           label="Endereço / localização"
-          placeholder="ex: Rua das Flores, 100 — ou só o nome do lugar"
+          placeholder="ex: Cachoeira da Fumaça, Bahia"
           value={form.address}
-          onChange={(e) => set("address", e.target.value)}
-          hint="Opcional — ajuda no mapa"
+          onChange={(val) => {
+            // typing manually invalidates previously selected lat/lng
+            setForm((f) => ({ ...f, address: val, lat: undefined, lng: undefined }));
+          }}
+          onSelect={(place) => {
+            setForm((f) => ({
+              ...f,
+              address: place.shortName,
+              lat: place.lat,
+              lng: place.lng,
+              // if name is still empty, prefill with the selected place
+              name: f.name.trim() ? f.name : place.shortName,
+            }));
+          }}
+          hint={
+            form.lat && form.lng
+              ? `📍 ${form.lat.toFixed(4)}, ${form.lng.toFixed(4)} — coordenadas salvas`
+              : "Comece a digitar um endereço — vamos buscar a localização exata"
+          }
         />
       </motion.div>
 
