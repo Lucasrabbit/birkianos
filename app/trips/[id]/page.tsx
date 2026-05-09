@@ -132,6 +132,12 @@ export default function TripPage({ params }: { params: { id: string } }) {
               <span className="font-hand text-xl">viagens</span>
             </Link>
             <div className="flex gap-2">
+              <Link href={`/trips/${id}/museu`}>
+                <Button variant="ghost" size="sm">
+                  <span>✿</span>
+                  abrir o museu
+                </Button>
+              </Link>
               <Button variant="ghost" size="sm" onClick={() => setEditOpen(true)}>
                 <Edit2 size={14} />
                 editar
