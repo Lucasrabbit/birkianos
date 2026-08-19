@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TripForm from "@/components/trips/TripForm";
 import Topbar from "@/components/ui/Topbar";
-import { createTrip } from "@/lib/supabase";
+import { createTrip } from "@/lib/api";
 import { Trip } from "@/types";
 
 export default function NewTripPage() {

@@ -9,7 +9,7 @@ import TripCard from "@/components/trips/TripCard";
 import Button from "@/components/ui/Button";
 import SunflowerDecor from "@/components/ui/SunflowerDecor";
 import Topbar from "@/components/ui/Topbar";
-import { getTrips, deleteTrip } from "@/lib/supabase";
+import { getTrips, deleteTrip } from "@/lib/api";
 
 // Polaroid SVG illustrations — inline, sem dependência externa
 function HeroPolaroids() {
@@ -144,7 +144,7 @@ export default function HomePage() {
   useEffect(() => {
     getTrips()
       .then(setTrips)
-      .catch(() => setError("Não conseguimos carregar suas viagens. Configure o Supabase."))
+      .catch(() => setError("Não conseguimos carregar suas viagens. Confira a conexão com o banco."))
       .finally(() => setLoading(false));
   }, []);
 
@@ -312,7 +312,7 @@ export default function HomePage() {
               <p className="font-serif text-red-700 italic text-lg mb-1">Ops!</p>
               <p className="text-red-600 text-sm">{error}</p>
               <p className="font-mono text-red-400 text-xs mt-2 uppercase tracking-[0.1em]">
-                Configure as variáveis do Supabase no painel da Vercel.
+                Configure a variável DATABASE_URL no painel da Vercel.
               </p>
             </motion.div>
           )}

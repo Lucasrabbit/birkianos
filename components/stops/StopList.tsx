@@ -28,7 +28,7 @@ import {
   updateStop,
   deleteStop,
   reorderStops,
-} from "@/lib/supabase";
+} from "@/lib/api";
 
 interface StopListProps {
   trip: Trip;

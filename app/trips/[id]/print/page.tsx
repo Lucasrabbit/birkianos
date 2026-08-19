@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Printer, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Trip, Stop, Note } from "@/types";
-import { getTripById } from "@/lib/supabase";
+import { getTripById } from "@/lib/api";
 import PrintLayout from "@/components/print/PrintLayout";
 import Button from "@/components/ui/Button";
 

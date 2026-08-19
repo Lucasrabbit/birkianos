@@ -8,7 +8,7 @@ import { NOTE_TYPE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import FloralCorner from "@/components/ui/FloralCorner";
-import { createNote, updateNote, deleteNote } from "@/lib/supabase";
+import { createNote, updateNote, deleteNote } from "@/lib/api";
 
 interface NotesProps {
   trip: Trip;

@@ -6,7 +6,7 @@ import { ArrowLeft, MapPin, ArrowRight, Printer, Edit2 } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Trip, Stop, Note } from "@/types";
-import { getTripById, updateTrip } from "@/lib/supabase";
+import { getTripById, updateTrip } from "@/lib/api";
 import TripSummary from "@/components/trips/TripSummary";
 import StopList from "@/components/stops/StopList";
 import Timeline from "@/components/timeline/Timeline";

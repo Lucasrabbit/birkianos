@@ -22,6 +22,7 @@ export interface Trip {
   updated_at: string;
   stops?: Stop[];
   notes?: Note[];
+  photos?: Photo[];
 }
 
 export interface Stop {
@@ -49,6 +50,16 @@ export interface Note {
   content: string;
   type: "checklist" | "reminder" | "idea";
   completed: boolean;
+  created_at: string;
+}
+
+export interface Photo {
+  id: string;
+  trip_id: string;
+  stop_id?: string | null;
+  caption?: string;
+  width?: number;
+  height?: number;
   created_at: string;
 }
 

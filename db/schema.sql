@@ -1,7 +1,7 @@
--- Birk's Trip — Database Schema
--- Run this in your Supabase SQL editor
+-- Birk's Trip — Database Schema (Neon Postgres)
+-- Run this once in the Neon SQL Editor (or `psql "$DATABASE_URL" -f db/schema.sql`)
 
--- Enable UUID extension
+-- Enable UUID generation
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Trips
@@ -51,10 +51,24 @@ CREATE TABLE IF NOT EXISTS notes (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Photos (stored in Google Drive; this table only keeps the pointer + metadata)
+CREATE TABLE IF NOT EXISTS photos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  trip_id UUID NOT NULL REFERENCES trips(id) ON DELETE CASCADE,
+  stop_id UUID REFERENCES stops(id) ON DELETE SET NULL,
+  drive_file_id TEXT NOT NULL,
+  caption TEXT,
+  width INTEGER,
+  height INTEGER,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS stops_trip_id_idx ON stops(trip_id);
 CREATE INDEX IF NOT EXISTS stops_position_idx ON stops(trip_id, position);
 CREATE INDEX IF NOT EXISTS notes_trip_id_idx ON notes(trip_id);
+CREATE INDEX IF NOT EXISTS photos_trip_id_idx ON photos(trip_id);
+CREATE INDEX IF NOT EXISTS photos_stop_id_idx ON photos(stop_id);
 
 -- Auto-update updated_at
 CREATE OR REPLACE FUNCTION update_updated_at()
@@ -65,11 +79,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trips_updated_at ON trips;
 CREATE TRIGGER trips_updated_at
   BEFORE UPDATE ON trips
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
--- Row Level Security (optional - enable if you add auth)
--- ALTER TABLE trips ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE stops ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE notes ENABLE ROW LEVEL SECURITY;

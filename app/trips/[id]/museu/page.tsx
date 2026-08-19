@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { Trip, Stop } from "@/types";
-import { getTripById } from "@/lib/supabase";
+import { Trip, Stop, Photo } from "@/types";
+import { getTripById } from "@/lib/api";
 import Topbar from "@/components/ui/Topbar";
 import MuseuHero from "@/components/museu/MuseuHero";
 import EmotionalTimeline from "@/components/museu/EmotionalTimeline";
@@ -15,6 +15,7 @@ export default function MuseuPage({ params }: { params: { id: string } }) {
   const { id } = params;
   const [trip, setTrip] = useState<Trip | null>(null);
   const [stops, setStops] = useState<Stop[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
   const contoRef = useRef<HTMLDivElement>(null);
 
@@ -24,6 +25,7 @@ export default function MuseuPage({ params }: { params: { id: string } }) {
         if (data) {
           setTrip(data);
           setStops((data.stops ?? []).sort((a, b) => a.position - b.position));
+          setPhotos(data.photos ?? []);
         }
       })
       .catch(() => {})
@@ -94,7 +96,7 @@ export default function MuseuPage({ params }: { params: { id: string } }) {
         <EmotionalTimeline stops={stops} />
       </div>
 
-      <LivingGallery stops={stops} />
+      <LivingGallery tripId={id} stops={stops} photos={photos} onPhotosChange={setPhotos} />
 
       <footer
         className="paper-bg"
