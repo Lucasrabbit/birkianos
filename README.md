@@ -20,11 +20,13 @@ npm run dev
 2. Copie a **connection string** (formato `postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require`) e coloque em `DATABASE_URL`.
 3. Abra o **SQL Editor** do projeto no painel do Neon e rode o conteúdo de [`db/schema.sql`](./db/schema.sql) — cria as tabelas `trips`, `stops`, `notes` e `photos`. Só precisa fazer isso uma vez.
 
-## 2. Fotos (Google Drive)
+Com isso o app já funciona por completo (viagens, paradas, notas, timeline, mapa, impressão) — o passo abaixo é opcional e pode ficar pra depois.
 
-As fotos não ficam num bucket de terceiros — são enviadas para o **seu próprio Google Drive** (usa o armazenamento que você já tem lá) e o app faz o proxy dos bytes, então elas continuam privadas (não dependem de link público do Drive).
+## 2. Fotos (Google Drive) — opcional
 
-Passo a passo pra gerar as credenciais:
+Sem essas variáveis configuradas, o app funciona normalmente; só o botão de "adicionar fotos" no Museu de Nós fica escondido (`GET /api/config` detecta que faltam as credenciais e o front some com o controle sozinho, sem erro).
+
+As fotos não ficam num bucket de terceiros — são enviadas para o **seu próprio Google Drive** (usa o armazenamento que você já tem lá) e o app faz o proxy dos bytes, então elas continuam privadas (não dependem de link público do Drive). O processo de credenciais do Google é um pouco burocrático; quando quiser habilitar, o passo a passo é:
 
 1. **Crie um projeto** no [Google Cloud Console](https://console.cloud.google.com/) (ou reaproveite um existente).
 2. **Ative a API**: menu *APIs & Services → Library* → busque "Google Drive API" → *Enable*.
