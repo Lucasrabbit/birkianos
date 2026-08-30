@@ -18,7 +18,8 @@ npm run dev
 
 1. Crie um projeto em [neon.tech](https://neon.tech) (free tier).
 2. Copie a **connection string** (formato `postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb?sslmode=require`) e coloque em `DATABASE_URL`.
-3. Abra o **SQL Editor** do projeto no painel do Neon e rode o conteúdo de [`db/schema.sql`](./db/schema.sql) — cria as tabelas `trips`, `stops`, `notes` e `photos`. Só precisa fazer isso uma vez.
+
+Não precisa rodar `db/schema.sql` manualmente — o app cria as tabelas sozinho (`CREATE TABLE IF NOT EXISTS`/`CREATE OR REPLACE`, tudo idempotente) na primeira request depois de `DATABASE_URL` configurada. O arquivo [`db/schema.sql`](./db/schema.sql) fica só como referência/para uso com `psql` fora do app, se quiser.
 
 Com isso o app já funciona por completo (viagens, paradas, notas, timeline, mapa, impressão) — o passo abaixo é opcional e pode ficar pra depois.
 
@@ -49,4 +50,8 @@ As fotos não ficam num bucket de terceiros — são enviadas para o **seu próp
 
 ## Deploy (Vercel)
 
-Configure as mesmas variáveis (`DATABASE_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `GOOGLE_DRIVE_FOLDER_ID`) em *Project Settings → Environment Variables* na Vercel.
+O projeto **birkianos** já está linkado neste repo na Vercel (deploy automático a cada push). Falta só:
+
+1. *Project Settings → Environment Variables* → adicione `DATABASE_URL` (Production **e** Preview, se quiser testar direto pela URL de preview desta branch antes de dar merge).
+2. As variáveis do Google (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `GOOGLE_DRIVE_FOLDER_ID`) entram do mesmo jeito quando as fotos forem habilitadas — não são necessárias agora.
+3. Depois de salvar a variável, redeploy (a Vercel não aplica env var nova em builds já existentes): *Deployments* → nos "..." do último deploy → *Redeploy*.
