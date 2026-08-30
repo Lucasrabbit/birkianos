@@ -11,6 +11,7 @@ interface LivingGalleryProps {
   tripId: string;
   stops: Stop[];
   photos: Photo[];
+  photosEnabled: boolean;
   onPhotosChange: (photos: Photo[]) => void;
 }
 
@@ -19,7 +20,13 @@ function tilt(id: string): number {
   return ((hash % 11) - 5) * 0.7;
 }
 
-export default function LivingGallery({ tripId, stops, photos, onPhotosChange }: LivingGalleryProps) {
+export default function LivingGallery({
+  tripId,
+  stops,
+  photos,
+  photosEnabled,
+  onPhotosChange,
+}: LivingGalleryProps) {
   if (stops.length === 0) return null;
 
   const stopIds = new Set(stops.map((s) => s.id));
@@ -42,11 +49,17 @@ export default function LivingGallery({ tripId, stops, photos, onPhotosChange }:
       </div>
 
       <div className="mb-8">
-        <PhotoUploader
-          tripId={tripId}
-          stops={stops}
-          onUploaded={(photo) => onPhotosChange([photo, ...photos])}
-        />
+        {photosEnabled ? (
+          <PhotoUploader
+            tripId={tripId}
+            stops={stops}
+            onUploaded={(photo) => onPhotosChange([photo, ...photos])}
+          />
+        ) : (
+          <p className="font-hand text-birk-ink-faint text-lg">
+            fotos de verdade chegam em breve ✿
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10 md:gap-x-10 md:gap-y-14">

@@ -113,3 +113,9 @@ export async function deletePhoto(id: string): Promise<void> {
 export function photoUrl(id: string): string {
   return `/api/photos/${id}/raw`;
 }
+
+// --- Config ---
+
+export async function getConfig(): Promise<{ photosEnabled: boolean }> {
+  return request<{ photosEnabled: boolean }>("/api/config");
+}

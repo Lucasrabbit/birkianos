@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Trip, Stop, Photo } from "@/types";
-import { getTripById } from "@/lib/api";
+import { getTripById, getConfig } from "@/lib/api";
 import Topbar from "@/components/ui/Topbar";
 import MuseuHero from "@/components/museu/MuseuHero";
 import EmotionalTimeline from "@/components/museu/EmotionalTimeline";
@@ -16,6 +16,7 @@ export default function MuseuPage({ params }: { params: { id: string } }) {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [stops, setStops] = useState<Stop[]>([]);
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [photosEnabled, setPhotosEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const contoRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +31,9 @@ export default function MuseuPage({ params }: { params: { id: string } }) {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
+    getConfig()
+      .then((c) => setPhotosEnabled(c.photosEnabled))
+      .catch(() => {});
   }, [id]);
 
   const handleScrollDown = () => {
@@ -96,7 +100,13 @@ export default function MuseuPage({ params }: { params: { id: string } }) {
         <EmotionalTimeline stops={stops} />
       </div>
 
-      <LivingGallery tripId={id} stops={stops} photos={photos} onPhotosChange={setPhotos} />
+      <LivingGallery
+        tripId={id}
+        stops={stops}
+        photos={photos}
+        photosEnabled={photosEnabled}
+        onPhotosChange={setPhotos}
+      />
 
       <footer
         className="paper-bg"
