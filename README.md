@@ -23,7 +23,14 @@ Não precisa rodar `db/schema.sql` manualmente — o app cria as tabelas sozinho
 
 Com isso o app já funciona por completo (viagens, paradas, notas, timeline, mapa, impressão) — o passo abaixo é opcional e pode ficar pra depois.
 
-## 2. Fotos (Google Drive) — opcional
+## 2. Rotas e clima — já funcionam, sem configurar nada
+
+Nenhuma chave de API é necessária para estas duas:
+
+- **Distância e tempo entre paradas** — [OSRM](https://project-osrm.org) (`lib/routing.ts`), o mesmo ecossistema OpenStreetMap do Nominatim que o app já usa na busca de endereços. O botão "calcular distâncias e tempos" no roteiro percorre origem → paradas (na ordem dos dias) → destino e grava cada trecho. Os valores ficam **editáveis à mão** no formulário da parada — o cálculo automático só preenche. É um servidor público de demonstração: ótimo para uso pessoal, sem garantia de disponibilidade. Para trocar por Google Distance Matrix ou OpenRouteService, basta reescrever `getLeg()` (e apontar `OSRM_BASE_URL` se for outro servidor OSRM).
+- **Clima por dia** — [Open-Meteo](https://open-meteo.com) (`lib/weather.ts`). Até ~15 dias antes mostra previsão de verdade; mais longe que isso mostra o clima típico daquela data (mesma data no ano anterior), marcado como "típico" para não passar previsão por certeza.
+
+## 3. Fotos (Google Drive) — opcional
 
 Sem essas variáveis configuradas, o app funciona normalmente; só o botão de "adicionar fotos" no Museu de Nós fica escondido (`GET /api/config` detecta que faltam as credenciais e o front some com o controle sozinho, sem erro).
 

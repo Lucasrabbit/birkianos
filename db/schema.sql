@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS trips (
   start_date DATE,
   end_date DATE,
   observations TEXT,
+  return_distance_km DECIMAL,
+  return_duration_minutes INTEGER,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -28,6 +30,7 @@ CREATE TABLE IF NOT EXISTS stops (
   name TEXT NOT NULL,
   type TEXT NOT NULL CHECK (type IN ('food','technical','accommodation','attraction','bathroom','highlight')),
   position INTEGER NOT NULL DEFAULT 0,
+  day INTEGER NOT NULL DEFAULT 1,
   arrival_time TIME,
   duration_minutes INTEGER,
   comment TEXT,
@@ -65,7 +68,7 @@ CREATE TABLE IF NOT EXISTS photos (
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS stops_trip_id_idx ON stops(trip_id);
-CREATE INDEX IF NOT EXISTS stops_position_idx ON stops(trip_id, position);
+CREATE INDEX IF NOT EXISTS stops_position_idx ON stops(trip_id, day, position);
 CREATE INDEX IF NOT EXISTS notes_trip_id_idx ON notes(trip_id);
 CREATE INDEX IF NOT EXISTS photos_trip_id_idx ON photos(trip_id);
 CREATE INDEX IF NOT EXISTS photos_stop_id_idx ON photos(stop_id);

@@ -13,6 +13,8 @@ interface StopFormProps {
   initial?: Partial<Stop>;
   tripId: string;
   position: number;
+  day?: number;
+  totalDays?: number;
   onSubmit: (data: Omit<Stop, "id" | "created_at">) => Promise<void>;
   onCancel?: () => void;
   submitLabel?: string;
@@ -31,6 +33,8 @@ export default function StopForm({
   initial,
   tripId,
   position,
+  day = 1,
+  totalDays = 1,
   onSubmit,
   onCancel,
   submitLabel = "Adicionar parada ✨",
@@ -38,8 +42,11 @@ export default function StopForm({
   const [form, setForm] = useState({
     name: initial?.name ?? "",
     type: (initial?.type ?? "attraction") as StopType,
+    day: initial?.day ?? day,
     arrival_time: initial?.arrival_time ?? "",
     duration_minutes: initial?.duration_minutes ?? ("" as number | ""),
+    distance_from_prev: initial?.distance_from_prev ?? ("" as number | ""),
+    duration_from_prev: initial?.duration_from_prev ?? ("" as number | ""),
     comment: initial?.comment ?? "",
     why_here: initial?.why_here ?? "",
     expected_moment: initial?.expected_moment ?? "",
@@ -68,11 +75,16 @@ export default function StopForm({
       await onSubmit({
         trip_id: tripId,
         position,
+        day: Number(form.day) || 1,
         name: form.name.trim(),
         type: form.type,
         arrival_time: form.arrival_time || undefined,
         duration_minutes:
           form.duration_minutes !== "" ? Number(form.duration_minutes) : undefined,
+        distance_from_prev:
+          form.distance_from_prev !== "" ? Number(form.distance_from_prev) : undefined,
+        duration_from_prev:
+          form.duration_from_prev !== "" ? Number(form.duration_from_prev) : undefined,
         comment: form.comment.trim() || undefined,
         why_here: form.why_here.trim() || undefined,
         expected_moment: form.expected_moment.trim() || undefined,
@@ -171,6 +183,35 @@ export default function StopForm({
       <motion.div
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.14 }}
+      >
+        <label className="text-sm font-serif text-birk-ink block mb-2">
+          Dia da viagem
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: Math.max(totalDays, Number(form.day) || 1) }, (_, i) => i + 1).map(
+            (d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => set("day", d)}
+                className={cn(
+                  "px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.1em] transition-all cursor-pointer border",
+                  Number(form.day) === d
+                    ? "bg-birk-sun-pale text-birk-ink border-birk-sun"
+                    : "bg-white/70 text-birk-ink-faint border-birk-edge hover:border-birk-sun/50"
+                )}
+              >
+                dia {d}
+              </button>
+            )
+          )}
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.16 }}
         className="grid grid-cols-2 gap-4"
       >
@@ -187,6 +228,32 @@ export default function StopForm({
           placeholder="ex: 60"
           value={String(form.duration_minutes)}
           onChange={(e) => set("duration_minutes", e.target.value)}
+        />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.18 }}
+        className="grid grid-cols-2 gap-4"
+      >
+        <Input
+          label="Distância desde a anterior (km)"
+          type="number"
+          min={0}
+          step="0.1"
+          placeholder="ex: 87"
+          value={String(form.distance_from_prev)}
+          onChange={(e) => set("distance_from_prev", e.target.value)}
+          hint="preenchido pelo botão de calcular rotas — dá pra ajustar na mão"
+        />
+        <Input
+          label="Tempo de deslocamento (min)"
+          type="number"
+          min={0}
+          placeholder="ex: 75"
+          value={String(form.duration_from_prev)}
+          onChange={(e) => set("duration_from_prev", e.target.value)}
         />
       </motion.div>
 

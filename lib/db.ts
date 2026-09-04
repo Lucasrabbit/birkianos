@@ -62,8 +62,12 @@ const SCHEMA_STATEMENTS = [
     height INTEGER,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )`,
+  // Colunas adicionadas depois da primeira versão do schema
+  `ALTER TABLE stops ADD COLUMN IF NOT EXISTS day INTEGER NOT NULL DEFAULT 1`,
+  `ALTER TABLE trips ADD COLUMN IF NOT EXISTS return_distance_km DECIMAL`,
+  `ALTER TABLE trips ADD COLUMN IF NOT EXISTS return_duration_minutes INTEGER`,
   `CREATE INDEX IF NOT EXISTS stops_trip_id_idx ON stops(trip_id)`,
-  `CREATE INDEX IF NOT EXISTS stops_position_idx ON stops(trip_id, position)`,
+  `CREATE INDEX IF NOT EXISTS stops_position_idx ON stops(trip_id, day, position)`,
   `CREATE INDEX IF NOT EXISTS notes_trip_id_idx ON notes(trip_id)`,
   `CREATE INDEX IF NOT EXISTS photos_trip_id_idx ON photos(trip_id)`,
   `CREATE INDEX IF NOT EXISTS photos_stop_id_idx ON photos(stop_id)`,
@@ -118,7 +122,7 @@ export async function getTripById(id: string): Promise<Trip | null> {
   if (!trip) return null;
 
   const [stops, notes, photos] = await Promise.all([
-    sql`SELECT * FROM stops WHERE trip_id = ${id} ORDER BY position ASC`,
+    sql`SELECT * FROM stops WHERE trip_id = ${id} ORDER BY day ASC, position ASC`,
     sql`SELECT * FROM notes WHERE trip_id = ${id} ORDER BY created_at ASC`,
     sql`SELECT id, trip_id, stop_id, caption, width, height, created_at FROM photos WHERE trip_id = ${id} ORDER BY created_at DESC`,
   ]);
@@ -159,6 +163,8 @@ const TRIP_FIELDS = [
   "start_date",
   "end_date",
   "observations",
+  "return_distance_km",
+  "return_duration_minutes",
 ] as const;
 
 export async function updateTrip(
@@ -191,11 +197,11 @@ export async function createStop(
   await ensureSchema();
   const rows = await sql`
     INSERT INTO stops (
-      trip_id, name, type, position, arrival_time, duration_minutes,
+      trip_id, name, type, position, day, arrival_time, duration_minutes,
       comment, why_here, expected_moment, address, lat, lng,
       distance_from_prev, duration_from_prev
     ) VALUES (
-      ${stop.trip_id}, ${stop.name}, ${stop.type}, ${stop.position},
+      ${stop.trip_id}, ${stop.name}, ${stop.type}, ${stop.position}, ${stop.day ?? 1},
       ${stop.arrival_time ?? null}, ${stop.duration_minutes ?? null},
       ${stop.comment ?? null}, ${stop.why_here ?? null}, ${stop.expected_moment ?? null},
       ${stop.address ?? null}, ${stop.lat ?? null}, ${stop.lng ?? null},
@@ -210,6 +216,7 @@ const STOP_FIELDS = [
   "name",
   "type",
   "position",
+  "day",
   "arrival_time",
   "duration_minutes",
   "comment",

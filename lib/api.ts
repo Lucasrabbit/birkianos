@@ -1,6 +1,6 @@
 "use client";
 
-import { Trip, Stop, Note, Photo } from "@/types";
+import { Trip, Stop, Note, Photo, DayWeather } from "@/types";
 
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
@@ -112,6 +112,24 @@ export async function deletePhoto(id: string): Promise<void> {
 
 export function photoUrl(id: string): string {
   return `/api/photos/${id}/raw`;
+}
+
+// --- Rotas e clima ---
+
+export async function recalculateRoute(
+  tripId: string
+): Promise<{ trip: Trip; calculated: number; failed: number }> {
+  return request(`/api/trips/${tripId}/route-legs`, { method: "POST" });
+}
+
+export async function getWeather(
+  lat: number,
+  lng: number,
+  date: string
+): Promise<DayWeather | null> {
+  const res = await fetch(`/api/weather?lat=${lat}&lng=${lng}&date=${date}`);
+  if (!res.ok) return null;
+  return res.json();
 }
 
 // --- Config ---

@@ -1,6 +1,6 @@
 import { Trip, Stop, Note } from "@/types";
 import { STOP_TYPE_CONFIG, NOTE_TYPE_CONFIG, BRAND_PHRASE } from "@/lib/constants";
-import { formatDate, formatDuration, tripDays } from "@/lib/utils";
+import { formatDate, formatDistance, formatDuration, tripDays } from "@/lib/utils";
 
 interface PrintLayoutProps {
   trip: Trip;
@@ -109,19 +109,41 @@ export default function PrintLayout({ trip, stops, notes }: PrintLayoutProps) {
 
             {stops.map((stop, i) => {
               const cfg = STOP_TYPE_CONFIG[stop.type];
+              const startsNewDay = i === 0 || stops[i - 1].day !== stop.day;
               return (
-                <div key={stop.id} className="stop-item">
-                  <div className="stop-number">{i + 1}</div>
-                  <div className="stop-content">
-                    <h3>{stop.name}</h3>
-                    <div className="stop-meta">
-                      <span className="stop-badge">{cfg.emoji} {cfg.label}</span>
-                      {stop.arrival_time && <span>⏰ {stop.arrival_time}</span>}
-                      {stop.duration_minutes && <span>🕐 {formatDuration(stop.duration_minutes)}</span>}
-                      {stop.address && <span>📍 {stop.address}</span>}
+                <div key={stop.id}>
+                  {startsNewDay && (
+                    <div
+                      style={{
+                        margin: "14px 0 8px",
+                        paddingBottom: "4px",
+                        borderBottom: "1px solid #d9c79c",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Dia {stop.day}
                     </div>
-                    {stop.comment && <p className="stop-detail">{stop.comment}</p>}
-                    {stop.expected_moment && <p className="stop-detail">💛 &ldquo;{stop.expected_moment}&rdquo;</p>}
+                  )}
+                  <div className="stop-item">
+                    <div className="stop-number">{i + 1}</div>
+                    <div className="stop-content">
+                      <h3>{stop.name}</h3>
+                      <div className="stop-meta">
+                        <span className="stop-badge">{cfg.emoji} {cfg.label}</span>
+                        {stop.arrival_time && <span>⏰ {stop.arrival_time}</span>}
+                        {stop.duration_minutes && <span>🕐 {formatDuration(stop.duration_minutes)}</span>}
+                        {(stop.distance_from_prev || stop.duration_from_prev) && (
+                          <span>
+                            🚗 {formatDistance(stop.distance_from_prev)}
+                            {stop.distance_from_prev && stop.duration_from_prev ? " · " : ""}
+                            {formatDuration(stop.duration_from_prev)}
+                          </span>
+                        )}
+                        {stop.address && <span>📍 {stop.address}</span>}
+                      </div>
+                      {stop.comment && <p className="stop-detail">{stop.comment}</p>}
+                      {stop.expected_moment && <p className="stop-detail">💛 &ldquo;{stop.expected_moment}&rdquo;</p>}
+                    </div>
                   </div>
                 </div>
               );
@@ -131,7 +153,16 @@ export default function PrintLayout({ trip, stops, notes }: PrintLayoutProps) {
               <div className="stop-number" style={{ background: "#5a6b3a", color: "#f5ecd9" }}>🟢</div>
               <div className="stop-content">
                 <h3>{trip.destination}</h3>
-                <div className="stop-meta">Destino final</div>
+                <div className="stop-meta">
+                  <span>Destino final</span>
+                  {(trip.return_distance_km || trip.return_duration_minutes) && (
+                    <span>
+                      🚗 {formatDistance(trip.return_distance_km)}
+                      {trip.return_distance_km && trip.return_duration_minutes ? " · " : ""}
+                      {formatDuration(trip.return_duration_minutes)}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
