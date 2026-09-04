@@ -5,7 +5,7 @@ import { Clock, MapPin } from "lucide-react";
 import { Stop, Trip } from "@/types";
 import { StopBadge } from "@/components/ui/Badge";
 import { STOP_TYPE_CONFIG } from "@/lib/constants";
-import { formatDate, formatDuration, addMinutesToTime } from "@/lib/utils";
+import { formatDuration, addMinutesToTime } from "@/lib/utils";
 import { parseISO, addDays, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -21,64 +21,37 @@ interface DayGroup {
 }
 
 function groupStopsByDay(trip: Trip, stops: Stop[]): DayGroup[] {
-  if (!trip.start_date || stops.length === 0) {
-    return [{ label: "Roteiro", stops }];
+  if (stops.length === 0) return [];
+
+  const byDay = new Map<number, Stop[]>();
+  for (const stop of stops) {
+    const list = byDay.get(stop.day) ?? [];
+    list.push(stop);
+    byDay.set(stop.day, list);
   }
 
-  const groups: DayGroup[] = [];
-  let currentGroup: DayGroup | null = null;
-  let currentDate = parseISO(trip.start_date);
-  let dayIndex = 0;
+  return Array.from(byDay.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([day, dayStops]) => {
+      let date: string | undefined;
+      let label = `Dia ${day}`;
 
-  const stopsWithTime = stops.filter((s) => s.arrival_time);
-
-  if (stopsWithTime.length > 0) {
-    for (const stop of stops) {
-      const label = `Dia ${dayIndex + 1} — ${format(currentDate, "dd 'de' MMMM", { locale: ptBR })}`;
-      const dateStr = format(currentDate, "yyyy-MM-dd");
-
-      if (!currentGroup || currentGroup.date !== dateStr) {
-        currentGroup = { date: dateStr, label, stops: [] };
-        groups.push(currentGroup);
-        dayIndex++;
+      if (trip.start_date) {
+        try {
+          const d = addDays(parseISO(trip.start_date), day - 1);
+          date = format(d, "yyyy-MM-dd");
+          label = `Dia ${day} — ${format(d, "dd 'de' MMMM", { locale: ptBR })}`;
+        } catch {
+          // data inválida: fica só "Dia N"
+        }
       }
 
-      currentGroup.stops.push(stop);
-
-      const totalMinutes = (stop.duration_minutes ?? 0) + (stop.duration_from_prev ?? 0);
-      if (totalMinutes > 12 * 60) {
-        currentDate = addDays(currentDate, 1);
-        dayIndex++;
-        currentGroup = null;
-      }
-    }
-  } else {
-    const totalDays = trip.end_date
-      ? Math.ceil(
-          (parseISO(trip.end_date).getTime() - parseISO(trip.start_date).getTime()) /
-            (1000 * 60 * 60 * 24)
-        ) + 1
-      : 1;
-
-    const stopsPerDay = Math.ceil(stops.length / totalDays);
-    for (let d = 0; d < totalDays; d++) {
-      const date = addDays(currentDate, d);
-      const dayStops = stops.slice(d * stopsPerDay, (d + 1) * stopsPerDay);
-      if (dayStops.length > 0) {
-        groups.push({
-          date: format(date, "yyyy-MM-dd"),
-          label: `Dia ${d + 1} — ${format(date, "dd 'de' MMMM", { locale: ptBR })}`,
-          stops: dayStops,
-        });
-      }
-    }
-  }
-
-  if (groups.length === 0) {
-    return [{ label: "Roteiro", stops }];
-  }
-
-  return groups;
+      return {
+        date,
+        label,
+        stops: [...dayStops].sort((a, b) => a.position - b.position),
+      };
+    });
 }
 
 export default function Timeline({ trip, stops }: TimelineProps) {

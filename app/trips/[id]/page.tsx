@@ -6,7 +6,7 @@ import { ArrowLeft, MapPin, ArrowRight, Printer, Edit2 } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Trip, Stop, Note } from "@/types";
-import { getTripById, updateTrip } from "@/lib/supabase";
+import { getTripById, updateTrip } from "@/lib/api";
 import TripSummary from "@/components/trips/TripSummary";
 import StopList from "@/components/stops/StopList";
 import Timeline from "@/components/timeline/Timeline";
@@ -67,11 +67,14 @@ export default function TripPage({ params }: { params: { id: string } }) {
   const days = trip ? tripDays(trip.start_date, trip.end_date) : 1;
 
   const summaryData = {
-    totalKm: stops.reduce((a, s) => a + (s.distance_from_prev ?? 0), 0),
-    totalMinutes: stops.reduce(
-      (a, s) => a + (s.duration_minutes ?? 0) + (s.duration_from_prev ?? 0),
-      0
-    ),
+    totalKm:
+      stops.reduce((a, s) => a + (s.distance_from_prev ?? 0), 0) +
+      (trip?.return_distance_km ?? 0),
+    totalMinutes:
+      stops.reduce(
+        (a, s) => a + (s.duration_minutes ?? 0) + (s.duration_from_prev ?? 0),
+        0
+      ) + (trip?.return_duration_minutes ?? 0),
     stopsCount: stops.length,
     days,
   };
@@ -268,7 +271,12 @@ export default function TripPage({ params }: { params: { id: string } }) {
                   transition={{ duration: 0.25 }}
                 >
                   {leftTab === "roteiro" && (
-                    <StopList trip={trip} stops={stops} onStopsChange={setStops} />
+                    <StopList
+                      trip={trip}
+                      stops={stops}
+                      onStopsChange={setStops}
+                      onTripChange={setTrip}
+                    />
                   )}
                   {leftTab === "timeline" && (
                     <Timeline trip={trip} stops={stops} />

@@ -18,10 +18,14 @@ export interface Trip {
   start_date?: string;
   end_date?: string;
   observations?: string;
+  // trecho final: última parada → destino ("volta pra casa")
+  return_distance_km?: number;
+  return_duration_minutes?: number;
   created_at: string;
   updated_at: string;
   stops?: Stop[];
   notes?: Note[];
+  photos?: Photo[];
 }
 
 export interface Stop {
@@ -30,6 +34,7 @@ export interface Stop {
   name: string;
   type: StopType;
   position: number;
+  day: number;
   arrival_time?: string;
   duration_minutes?: number;
   comment?: string;
@@ -50,6 +55,27 @@ export interface Note {
   type: "checklist" | "reminder" | "idea";
   completed: boolean;
   created_at: string;
+}
+
+export interface Photo {
+  id: string;
+  trip_id: string;
+  stop_id?: string | null;
+  caption?: string;
+  width?: number;
+  height?: number;
+  created_at: string;
+}
+
+export interface DayWeather {
+  kind: "forecast" | "typical";
+  date: string;
+  tempMax: number | null;
+  tempMin: number | null;
+  precipitationChance: number | null;
+  code: number | null;
+  label: string;
+  emoji: string;
 }
 
 export interface TripSummaryData {
